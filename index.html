@@ -10,7 +10,7 @@
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; background: linear-gradient(135deg, #fdf4ff 0%, #fef9ee 100%); min-height: 100vh; }
         .card-border { border: 3px solid #d8b4fe; box-shadow: 4px 4px 0px #ede9fe; }
-        .btn-press:active { transform: translate(2px,2px); box-shadow: 1px 1px 0px #ede9fe; }
+        .btn-press:active { transform: translate(2px,2px); }
         .slot-select {
             display: inline-block;
             background: #faf5ff;
@@ -18,17 +18,17 @@
             color: #7e22ce;
             font-weight: 900;
             border-radius: 0.6rem;
-            padding: 0.1rem 0.4rem;
+            padding: 0.15rem 0.5rem;
             margin: 0 0.2rem;
             cursor: pointer;
             outline: none;
             vertical-align: middle;
-            font-size: 1em;
+            font-size: 0.95em;
         }
         .slot-select:hover { background: #f3e8ff; }
         .slot-select.answered { background: #f3e8ff; border-color: #7c3aed; }
-        .slot-select.correct { background: #dcfce7; border-color: #16a34a; color: #15803d; }
-        .slot-select.wrong { background: #fee2e2; border-color: #dc2626; color: #b91c1c; }
+        .slot-select.correct-slot { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+        .slot-select.wrong-slot { background: #fee2e2; border-color: #dc2626; color: #b91c1c; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 4px; }
     </style>
@@ -39,8 +39,6 @@
 <div class="sticky top-0 z-40 mb-5 max-w-5xl mx-auto">
     <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border-2 border-purple-200 px-4 py-3">
         <div class="flex flex-col md:flex-row gap-3 items-center justify-between">
-
-            <!-- Brand -->
             <div class="flex items-center gap-3">
                 <div class="flex gap-1 text-2xl">
                     <span class="animate-bounce" style="animation-duration:2.5s">👦</span>
@@ -48,47 +46,35 @@
                 </div>
                 <div>
                     <h1 class="font-black text-purple-700 text-lg md:text-xl tracking-tight">
-                        HAYDEN <span class="text-pink-500">&</span> CELINE 中文樂
+                        HAYDEN <span class="text-pink-500">&amp;</span> CELINE 中文樂
                     </h1>
                     <p class="text-xs text-purple-400 font-bold">香港小一中文 · 14天暑期精讀計劃</p>
                 </div>
             </div>
-
-            <!-- Font Size -->
             <div class="flex items-center gap-2 bg-purple-50 rounded-full px-3 py-1.5 border border-purple-200">
                 <span class="text-xs font-bold text-purple-700">字體：</span>
-                <button onclick="setFont('normal')" id="font-normal"
-                    class="font-btn px-3 py-1 text-xs font-black rounded-full bg-purple-500 text-white transition-all">
-                    標準
-                </button>
-                <button onclick="setFont('large')" id="font-large"
-                    class="font-btn px-3 py-1 text-xs font-black rounded-full text-purple-600 hover:bg-purple-100 transition-all">
-                    特大
-                </button>
+                <button onclick="setFont('normal')" id="font-normal" class="font-btn px-3 py-1 text-xs font-black rounded-full bg-purple-500 text-white transition-all">標準</button>
+                <button onclick="setFont('large')" id="font-large" class="font-btn px-3 py-1 text-xs font-black rounded-full text-purple-600 hover:bg-purple-100 transition-all">特大</button>
             </div>
-
-            <!-- Stars -->
             <div class="flex items-center gap-2 bg-amber-400 text-amber-950 px-4 py-1.5 rounded-full font-black text-sm shadow">
-                <i class="fa-solid fa-star text-amber-800 animate-spin" style="animation-duration:5s"></i>
+                <i class="fa-solid fa-star text-amber-800"></i>
                 <span>星星：<span id="star-count">0</span> / 14</span>
             </div>
-
         </div>
     </div>
 </div>
 
-<!-- MAIN CARD -->
+<!-- MAIN -->
 <div class="max-w-5xl mx-auto bg-white rounded-3xl card-border p-4 md:p-6" id="main-area">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
-        <!-- CALENDAR SIDEBAR -->
+        <!-- SIDEBAR -->
         <aside class="lg:col-span-4 bg-purple-50/50 rounded-2xl p-4 border-2 border-purple-100">
             <h2 class="text-base font-black text-purple-700 mb-3 flex items-center gap-2">
                 <i class="fa-solid fa-calendar-days"></i> 14天挑戰日曆
             </h2>
             <div id="calendar-grid" class="grid grid-cols-4 lg:grid-cols-2 gap-2"></div>
-            <button onclick="resetAll()"
-                class="w-full mt-4 py-2 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl border border-slate-300 transition-all">
+            <button onclick="resetAll()" class="w-full mt-4 py-2 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl border border-slate-300 transition-all">
                 <i class="fa-solid fa-rotate-left mr-1"></i> 重設所有進度
             </button>
         </aside>
@@ -96,22 +82,15 @@
         <!-- WORKSPACE -->
         <main class="lg:col-span-8 flex flex-col gap-4 min-h-[520px]">
 
-            <!-- Exercise Header -->
             <div id="ex-header" class="pb-4 border-b-2 border-dashed border-purple-100">
                 <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
-                    <span id="day-badge"
-                        class="bg-purple-500 text-white font-black px-4 py-1.5 rounded-full text-sm shadow">
-                        第 1 天
-                    </span>
+                    <span id="day-badge" class="bg-purple-500 text-white font-black px-4 py-1.5 rounded-full text-sm shadow">第 1 天</span>
                     <div class="flex items-center gap-2">
-                        <select id="tts-lang"
-                            class="text-xs font-bold bg-white border border-purple-300 rounded-lg p-1 focus:outline-none"
-                            onchange="saveLang()">
+                        <select id="tts-lang" class="text-xs font-bold bg-white border border-purple-300 rounded-lg p-1 focus:outline-none" onchange="saveLang()">
                             <option value="zh-HK" selected>廣東話</option>
                             <option value="zh-TW">普通話</option>
                         </select>
-                        <button onclick="speakHeader()"
-                            class="w-9 h-9 bg-white border-2 border-purple-300 text-purple-600 rounded-full flex items-center justify-center hover:bg-purple-50 btn-press">
+                        <button onclick="speakHeader()" class="w-9 h-9 bg-white border-2 border-purple-300 text-purple-600 rounded-full flex items-center justify-center hover:bg-purple-50 btn-press">
                             <i class="fa-solid fa-volume-high"></i>
                         </button>
                     </div>
@@ -120,103 +99,70 @@
                 <p id="ex-tip" class="text-sm font-semibold text-slate-600 bg-purple-50 p-3 rounded-xl border border-dashed border-purple-200"></p>
             </div>
 
-            <!-- Question Area -->
             <div id="workspace" class="flex-grow"></div>
 
-            <!-- Mascot Panel -->
+            <!-- MASCOT -->
             <div class="bg-white rounded-2xl border-2 border-slate-200 shadow p-4 flex items-center gap-4">
-                <!-- Two Character Mascots -->
                 <div class="flex gap-2 flex-shrink-0">
-                    <!-- Hayden SVG -->
-                    <svg id="hayden-svg" viewBox="0 0 80 80" class="w-14 h-14">
+                    <svg viewBox="0 0 80 80" class="w-14 h-14">
                         <circle cx="40" cy="30" r="22" fill="#FEF3C7" stroke="#2D3748" stroke-width="3"/>
-                        <!-- Hair -->
                         <path d="M18 28 Q20 10 40 10 Q60 10 62 28" fill="#92400E" stroke="#2D3748" stroke-width="2"/>
-                        <!-- Eyes -->
                         <g id="h-eyes">
                             <circle cx="33" cy="28" r="3.5" fill="#2D3748"/>
                             <circle cx="47" cy="28" r="3.5" fill="#2D3748"/>
                             <circle cx="32" cy="27" r="1.2" fill="white"/>
                             <circle cx="46" cy="27" r="1.2" fill="white"/>
                         </g>
-                        <!-- Mouth -->
                         <g id="h-mouth">
                             <path d="M35 36 Q40 41 45 36" fill="none" stroke="#2D3748" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
-                        <!-- Body -->
                         <rect x="28" y="52" width="24" height="20" rx="6" fill="#93C5FD" stroke="#2D3748" stroke-width="2.5"/>
-                        <!-- Neck -->
-                        <rect x="36" y="50" width="8" height="6" fill="#FEF3C7" stroke="#2D3748" stroke-width="2"/>
-                        <!-- H badge -->
+                        <rect x="36" y="50" width="8" height="5" fill="#FEF3C7" stroke="#2D3748" stroke-width="2"/>
                         <circle cx="40" cy="62" r="5" fill="white" stroke="#2D3748" stroke-width="1.5"/>
                         <text x="40" y="66" text-anchor="middle" font-size="7" font-weight="900" fill="#3B82F6">H</text>
                     </svg>
-                    <!-- Celine SVG -->
-                    <svg id="celine-svg" viewBox="0 0 80 80" class="w-14 h-14">
+                    <svg viewBox="0 0 80 80" class="w-14 h-14">
                         <circle cx="40" cy="30" r="22" fill="#FEF3C7" stroke="#2D3748" stroke-width="3"/>
-                        <!-- Hair (long) -->
-                        <path d="M18 22 Q18 8 40 8 Q62 8 62 22 L65 55 Q62 50 58 55 L58 28 Q56 50 54 60" fill="#7C3AED" stroke="#2D3748" stroke-width="2"/>
+                        <path d="M18 22 Q18 8 40 8 Q62 8 62 22 L65 55 Q58 50 58 28 Q56 50 54 60" fill="#7C3AED" stroke="#2D3748" stroke-width="2"/>
                         <path d="M22 28 L18 60 Q22 55 26 60 L26 28" fill="#7C3AED" stroke="#2D3748" stroke-width="2"/>
-                        <!-- Eyes (with lashes) -->
                         <g id="c-eyes">
                             <circle cx="33" cy="28" r="3.5" fill="#2D3748"/>
                             <circle cx="47" cy="28" r="3.5" fill="#2D3748"/>
                             <circle cx="32" cy="27" r="1.2" fill="white"/>
                             <circle cx="46" cy="27" r="1.2" fill="white"/>
-                            <line x1="30" y1="24" x2="28" y2="21" stroke="#2D3748" stroke-width="1.5"/>
-                            <line x1="33" y1="23" x2="33" y2="20" stroke="#2D3748" stroke-width="1.5"/>
-                            <line x1="36" y1="24" x2="38" y2="21" stroke="#2D3748" stroke-width="1.5"/>
-                            <line x1="44" y1="24" x2="42" y2="21" stroke="#2D3748" stroke-width="1.5"/>
-                            <line x1="47" y1="23" x2="47" y2="20" stroke="#2D3748" stroke-width="1.5"/>
-                            <line x1="50" y1="24" x2="52" y2="21" stroke="#2D3748" stroke-width="1.5"/>
                         </g>
-                        <!-- Blush -->
                         <ellipse cx="28" cy="33" rx="5" ry="3" fill="#FCA5A5" opacity="0.7"/>
                         <ellipse cx="52" cy="33" rx="5" ry="3" fill="#FCA5A5" opacity="0.7"/>
-                        <!-- Mouth -->
                         <g id="c-mouth">
                             <path d="M35 36 Q40 41 45 36" fill="none" stroke="#2D3748" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
-                        <!-- Body -->
                         <rect x="27" y="52" width="26" height="20" rx="6" fill="#F9A8D4" stroke="#2D3748" stroke-width="2.5"/>
-                        <!-- Neck -->
-                        <rect x="36" y="50" width="8" height="6" fill="#FEF3C7" stroke="#2D3748" stroke-width="2"/>
-                        <!-- C badge -->
+                        <rect x="36" y="50" width="8" height="5" fill="#FEF3C7" stroke="#2D3748" stroke-width="2"/>
                         <circle cx="40" cy="62" r="5" fill="white" stroke="#2D3748" stroke-width="1.5"/>
                         <text x="40" y="66" text-anchor="middle" font-size="7" font-weight="900" fill="#EC4899">C</text>
                     </svg>
                 </div>
-
-                <!-- Chat Bubble -->
                 <div class="flex-grow">
                     <div class="bg-purple-50 border-2 border-purple-200 rounded-2xl p-3">
-                        <p id="mascot-msg" class="text-sm font-bold text-slate-700">
-                            👋 你好呀！我係 Hayden，佢係 Celine！今天想挑戰第幾天？
-                        </p>
+                        <p id="mascot-msg" class="text-sm font-bold text-slate-700">你好呀！我係 Hayden，佢係 Celine！今天挑戰哪一天？</p>
                     </div>
-                    <button onclick="speakMascot()"
-                        class="mt-1.5 text-xs text-purple-600 font-black flex items-center gap-1 hover:text-purple-800">
-                        <i class="fa-solid fa-volume-high"></i> 聽Hayden & Celine說話
+                    <button onclick="speakMascot()" class="mt-1.5 text-xs text-purple-600 font-black flex items-center gap-1 hover:text-purple-800">
+                        <i class="fa-solid fa-volume-high"></i> 聽 Hayden &amp; Celine 說話
                     </button>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
+            <!-- ACTIONS -->
             <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
-                <div id="status-msg" class="text-base font-black text-emerald-600 hidden">
-                    🎉 全部正確，太厲害了！
-                </div>
+                <div id="status-msg" class="text-base font-black text-emerald-600 hidden">🎉 全部正確，太厲害了！</div>
                 <div class="flex gap-2 ml-auto w-full sm:w-auto">
-                    <button onclick="clearDay()"
-                        class="flex-1 sm:flex-initial bg-white border-2 border-slate-300 text-slate-600 font-bold px-4 py-3 rounded-xl hover:bg-slate-50 btn-press">
+                    <button onclick="clearDay()" class="flex-1 sm:flex-initial bg-white border-2 border-slate-300 text-slate-600 font-bold px-4 py-3 rounded-xl hover:bg-slate-50 btn-press">
                         <i class="fa-solid fa-eraser mr-1"></i> 重填
                     </button>
-                    <button id="submit-btn" onclick="submitAnswers()"
-                        class="flex-1 sm:flex-initial bg-gradient-to-r from-purple-500 to-pink-500 text-white font-black px-6 py-3 rounded-xl border-2 border-purple-700 shadow btn-press hover:from-purple-600 hover:to-pink-600">
+                    <button id="submit-btn" onclick="submitAnswers()" class="flex-1 sm:flex-initial bg-gradient-to-r from-purple-500 to-pink-500 text-white font-black px-6 py-3 rounded-xl border-2 border-purple-700 shadow btn-press">
                         提交答案 <i class="fa-solid fa-paper-plane ml-1"></i>
                     </button>
-                    <button id="next-btn" onclick="goNext()"
-                        class="flex-1 sm:flex-initial bg-emerald-500 text-white font-black px-6 py-3 rounded-xl border-2 border-emerald-700 shadow btn-press hover:bg-emerald-600 hidden">
+                    <button id="next-btn" onclick="goNext()" class="flex-1 sm:flex-initial bg-emerald-500 text-white font-black px-6 py-3 rounded-xl border-2 border-emerald-700 shadow btn-press hidden">
                         下一天 <i class="fa-solid fa-arrow-right ml-1"></i>
                     </button>
                 </div>
@@ -226,39 +172,35 @@
     </div>
 </div>
 
-<!-- REWARD MODAL -->
-<div id="reward-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+<!-- MODAL -->
+<div id="reward-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4" style="display:none">
     <div class="bg-white rounded-3xl border-4 border-purple-400 shadow-2xl max-w-sm w-full p-7 text-center relative overflow-hidden">
         <div id="confetti-area" class="absolute inset-0 pointer-events-none"></div>
         <div class="text-6xl mb-3">🌟</div>
         <h4 id="modal-title" class="text-2xl font-black text-purple-700 mb-2"></h4>
         <p id="modal-body" class="text-slate-600 font-bold mb-6"></p>
-        <button onclick="closeModal()"
-            class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-black py-3 rounded-xl border-2 border-purple-700 btn-press hover:from-purple-600 hover:to-pink-600">
+        <button onclick="closeModal()" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-black py-3 rounded-xl border-2 border-purple-700 btn-press">
             太棒了！繼續加油！
         </button>
     </div>
 </div>
 
 <script>
-// ============================================================
-// HAYDEN & CELINE 中文樂 — Clean JavaScript (Zero Duplicate Bug)
-// ============================================================
+// =============================================
+// HAYDEN & CELINE 中文樂 — Fixed Clean Version
+// =============================================
 
-// --- AUDIO ENGINE ---
-let audioCtx = null;
-
+// --- AUDIO ---
+var audioCtx = null;
 function playSound(type) {
     try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        const now = audioCtx.currentTime;
-
+        var now = audioCtx.currentTime;
         if (type === 'correct') {
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(523, now);
@@ -288,383 +230,369 @@ function playSound(type) {
     } catch(e) {}
 }
 
-// --- TTS ENGINE (Single definition, no duplicates) ---
+// --- TTS (Single Definition) ---
 function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
-
-    const lang = document.getElementById('tts-lang').value;
-    const utt = new SpeechSynthesisUtterance(text);
+    var lang = document.getElementById('tts-lang').value;
+    var utt = new SpeechSynthesisUtterance(text);
     utt.lang = lang;
     utt.pitch = 1.1;
     utt.rate = 0.92;
-
-    const voices = window.speechSynthesis.getVoices();
+    var voices = window.speechSynthesis.getVoices();
     if (voices.length > 0) {
-        let match = null;
+        var match = null;
         if (lang === 'zh-HK') {
-            match = voices.find(v => {
-                const l = v.lang.toLowerCase(), n = v.name.toLowerCase();
-                return l.startsWith('zh-hk') || n.includes('sinji') || n.includes('sin-ji') || n.includes('cantonese') || n.includes('hong kong');
-            });
+            for (var i = 0; i < voices.length; i++) {
+                var v = voices[i];
+                var vl = v.lang.toLowerCase();
+                var vn = v.name.toLowerCase();
+                if (vl.indexOf('zh-hk') === 0 || vn.indexOf('sinji') >= 0 || vn.indexOf('cantonese') >= 0 || vn.indexOf('hong kong') >= 0) {
+                    match = v; break;
+                }
+            }
         } else {
-            match = voices.find(v => {
-                const l = v.lang.toLowerCase(), n = v.name.toLowerCase();
-                return l.startsWith('zh-tw') || l.startsWith('zh-cn') || n.includes('meijia') || n.includes('taiwan') || n.includes('tingting');
-            });
+            for (var i = 0; i < voices.length; i++) {
+                var v = voices[i];
+                var vl = v.lang.toLowerCase();
+                var vn = v.name.toLowerCase();
+                if (vl.indexOf('zh-tw') === 0 || vl.indexOf('zh-cn') === 0 || vn.indexOf('meijia') >= 0 || vn.indexOf('tingting') >= 0) {
+                    match = v; break;
+                }
+            }
         }
         if (!match) {
-            match = voices.find(v => v.lang.toLowerCase().startsWith('zh'));
+            for (var i = 0; i < voices.length; i++) {
+                if (voices[i].lang.toLowerCase().indexOf('zh') === 0) { match = voices[i]; break; }
+            }
         }
         if (match) { utt.voice = match; utt.lang = match.lang; }
     }
-
-    setTimeout(() => window.speechSynthesis.speak(utt), 60);
+    setTimeout(function() { window.speechSynthesis.speak(utt); }, 60);
 }
 
-function speakHeader() { const ex = exercises[currentDay]; if (ex) speakText(ex.audioText); }
-function speakMascot() { speakText(document.getElementById('mascot-msg').textContent); }
-function saveLang() { localStorage.setItem('hc_lang', document.getElementById('tts-lang').value); playSound('click'); }
+function speakHeader() {
+    var ex = getExercise(currentDay);
+    if (ex) speakText(ex.audioText);
+}
+function speakMascot() {
+    speakText(document.getElementById('mascot-msg').textContent);
+}
+function saveLang() {
+    localStorage.setItem('hc_lang', document.getElementById('tts-lang').value);
+    playSound('click');
+}
 
-// --- UTILITIES ---
-const shuffle = arr => {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+// --- SHUFFLE ---
+function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
     }
     return a;
-};
+}
 
-const dayIcons = ["🦁","🐯","🦊","🐨","🐼","🐸","🦜","🦋","🐬","🦄","🦒","🦩","🐙","🏆"];
+var dayIcons = ["🦁","🐯","🦊","🐨","🐼","🐸","🦜","🦋","🐬","🦄","🦒","🦩","🐙","🏆"];
 
 // --- STATE ---
-let currentDay = 1;
-let progress = {};
-let userAnswers = {};
-let reorderState = {};
-let revealed = false;
-let finalDone = false;
+var currentDay = 1;
+var progress = {};
+var userAnswers = {};
+var reorderState = {};
+var revealed = false;
+var finalDone = false;
 
-// --- 14 DAYS CURRICULUM (Fresh Questions) ---
-const exercises = {
-    1: {
-        title: "第一天：字的偏旁 🧩",
-        tip: "漢字由不同的偏旁組合而成。偏旁是構成漢字的基本部件，認識偏旁有助識字！",
-        type: "cloze",
-        audioText: "第一天，字的偏旁。請選出正確的字。",
-        questions: [
-            { id:"q1", text:"氵+ 青 = ?", options:["清","請","晴","情"], answer:"清", hint:"與水有關，清水、清潔" },
-            { id:"q2", text:"木 + 交 = ?", options:["校","較","效","皎"], answer:"校", hint:"上學的地方" },
-            { id:"q3", text:"口 + 乃 = ?", options:["奶","吃","叫","奶"], answer:"吃", hint:"把食物放進嘴裡" },
-            { id:"q4", text:"人 + 木 = ?", options:["休","体","林","伏"], answer:"休", hint:"休息、放假" },
-            { id:"q5", text:"火 + 丁 = ?", options:["灯","燈","熱","烤"], answer:"灯", hint:"照明用的，夜晚開燈" }
-        ]
-    },
-    2: {
-        title: "第二天：名詞(一) 農曆新年 🧧",
-        tip: "名詞是人物、地方或事物的名稱。例如：爸爸、香港、禮物。",
-        type: "pairing",
-        audioText: "第二天，名詞，農曆新年。請選詞填空。",
-        questions: [
-            {
-                id:"q1",
-                text:"農曆新年到了！（ 0 ）帶我去（ 1 ）買新衣服。我選了一件紅色的（ 2 ），因為紅色代表好運。回到家，（ 3 ）在廚房準備（ 4 ），大廳裏擺了（ 5 ），香味四溢。",
-                options:["爸爸","商場","外套","媽媽","年夜飯","橘子"],
-                answers:["爸爸","商場","外套","媽媽","年夜飯","橘子"]
-            },
-            {
-                id:"q2",
-                text:"除夕夜，全家人坐在一起看（ 0 ）。到了午夜，外面響起了（ 1 ）聲。第二天就是（ 2 ），親戚朋友都來拜年。長輩送給我一封（ 3 ），裏面有（ 4 ），我開心極了！",
-                options:["電視","鞭炮","大年初一","利是","壓歲錢"],
-                answers:["電視","鞭炮","大年初一","利是","壓歲錢"]
-            }
-        ]
-    },
-    3: {
-        title: "第三天：動詞(一) 我的一天 🌞",
-        tip: "動詞表示動作或行為，如：走、說、唱。句子中的動詞說明「做甚麼」。",
-        type: "pairing",
-        audioText: "第三天，動詞，我的一天。請選出正確的動詞填空。",
-        questions: [
-            {
-                id:"q1",
-                text:"1. 早上，我（ 0 ）了個懶腰，然後（ 1 ）牀起來。\n2. 媽媽叫我快點（ 2 ）臉和（ 3 ）牙，否則上學要遲到了。\n3. 我把書包（ 4 ）好，然後向學校（ 5 ）去。\n4. 到了學校，同學們都在操場上（ 6 ）遊戲。",
-                options:["伸","起","洗","刷","整理","走","玩"],
-                answers:["伸","起","洗","刷","整理","走","玩"]
-            },
-            {
-                id:"q2",
-                text:"5. 上課了，老師叫我們（ 0 ）書本，認真（ 1 ）課。\n6. 下課時，同學（ 2 ）我一起（ 3 ）球。\n7. 放學後，媽媽在校門口（ 4 ）我，我們一起（ 5 ）回家。",
-                options:["翻開","上","約","踢","等","走"],
-                answers:["翻開","上","約","踢","等","走"]
-            }
-        ]
-    },
-    4: {
-        title: "第四天：形容詞 繽紛世界 🌈",
-        tip: "形容詞用來描述事物的特徵，如大小、顏色、形狀、感覺等。",
-        type: "pairing",
-        audioText: "第四天，形容詞，繽紛世界。請選出最合適的形容詞填空。",
-        questions: [
-            {
-                id:"q1",
-                text:"1. 天上的月亮（ 0 ）的，像一個大盤子。\n2. 弟弟哭了，因為他摔倒了，膝蓋很（ 1 ）。\n3. 外婆煮的湯（ 2 ）又（ 3 ），我喝了一碗又一碗。\n4. 這條小路（ 4 ）得只能讓一個人通過。\n5. 夏天的太陽真（ 5 ），我要戴帽子遮陽。",
-                options:["圓圓","痛","香","甜","窄","猛烈"],
-                answers:["圓圓","痛","香","甜","窄","猛烈"]
-            },
-            {
-                id:"q2",
-                text:"6. 小貓的毛摸起來（ 0 ）又（ 1 ），讓人忍不住想多摸幾下。\n7. 這本書的故事非常（ 2 ），我一口氣讀完了。\n8. 爸爸的聲音（ 3 ），一說話大家都能聽到。\n9. 池塘裏的荷花開得（ 4 ），散發出淡淡的香氣。",
-                options:["柔軟","光滑","有趣","洪亮","美麗"],
-                answers:["柔軟","光滑","有趣","洪亮","美麗"]
-            }
-        ]
-    },
-    5: {
-        title: "第五天：標點符號(一) 逗號和句號 ✍️",
-        tip: "逗號「，」表示句子中間的停頓；句號「。」表示句子完結。",
-        type: "punctuation",
-        audioText: "第五天，標點符號，逗號和句號。請選出正確的標點符號。",
-        questions: [
-            {
-                id:"q1",
-                parts:[
-                    {text:"1. 今天是星期六"},
-                    {slotId:"s1", options:["，","。"], answer:"，"},
-                    {text:" 天氣非常晴朗"},
-                    {slotId:"s2", options:["，","。"], answer:"。"}
-                ]
-            },
-            {
-                id:"q2",
-                parts:[
-                    {text:"\n2. 小明跑得很快"},
-                    {slotId:"s1", options:["，","。"], answer:"，"},
-                    {text:" 比賽拿了第一名"},
-                    {slotId:"s2", options:["，","。"], answer:"。"}
-                ]
-            },
-            {
-                id:"q3",
-                parts:[
-                    {text:"\n3. 媽媽買了蘋果"},
-                    {slotId:"s1", options:["，","。"], answer:"，"},
-                    {text:" 香蕉和橘子"},
-                    {slotId:"s2", options:["，","。"], answer:"。"}
-                ]
-            },
-            {
-                id:"q4",
-                parts:[
-                    {text:"\n4. 放學後"},
-                    {slotId:"s1", options:["，","。"], answer:"，"},
-                    {text:" 我做完功課"},
-                    {slotId:"s2", options:["，","。"], answer:"，"},
-                    {text:" 再看電視"},
-                    {slotId:"s3", options:["，","。"], answer:"。"}
-                ]
-            },
-            {
-                id:"q5",
-                parts:[
-                    {text:"\n5. 爺爺種了玫瑰"},
-                    {slotId:"s1", options:["，","。"], answer:"，"},
-                    {text:" 茉莉和薰衣草"},
-                    {slotId:"s2", options:["，","。"], answer:"，"},
-                    {text:" 花園裏香氣撲鼻"},
-                    {slotId:"s3", options:["，","。"], answer:"。"}
-                ]
-            }
-        ]
-    },
-    6: {
-        title: "第六天：標點符號(二) 問號和嘆號 ❓❗",
-        tip: "問號「？」用於疑問句結尾；嘆號「！」用於感嘆、命令句結尾。",
-        type: "punctuation",
-        audioText: "第六天，標點符號，問號和嘆號。請選出正確的標點符號。",
-        questions: [
-            {
-                id:"q1",
-                parts:[
-                    {text:"1. 你今天吃了甚麼"},
-                    {slotId:"s1", options:["？","！","。"], answer:"？"}
-                ]
-            },
-            {
-                id:"q2",
-                parts:[
-                    {text:"\n2. 這朵花真美麗"},
-                    {slotId:"s1", options:["？","！","。"], answer:"！"}
-                ]
-            },
-            {
-                id:"q3",
-                parts:[
-                    {text:"\n3. 小心"},
-                    {slotId:"s1", options:["？","！","。"], answer:"！"},
-                    {text:" 那裏有條蛇"},
-                    {slotId:"s2", options:["？","！","。"], answer:"！"}
-                ]
-            },
-            {
-                id:"q4",
-                parts:[
-                    {text:"\n4. 請問圖書館在哪裏"},
-                    {slotId:"s1", options:["？","！","。"], answer:"？"}
-                ]
-            },
-            {
-                id:"q5",
-                parts:[
-                    {text:"\n5. 哇"},
-                    {slotId:"s1", options:["？","！","，"], answer:"！"},
-                    {text:" 這個蛋糕好大"},
-                    {slotId:"s2", options:["？","！","。"], answer:"！"}
-                ]
-            },
-            {
-                id:"q6",
-                parts:[
-                    {text:"\n6. 你知道答案嗎"},
-                    {slotId:"s1", options:["？","！","。"], answer:"？"}
-                ]
-            }
-        ]
-    },
-    7: {
-        title: "第七天：分辨同音字 🔤",
-        tip: "同音字是讀音相同但意思和寫法不同的字。例如「功」和「公」，「以」和「已」。",
-        type: "pairing",
-        audioText: "第七天，分辨同音字。請選出正確的字填空。",
-        questions: [
-            {
-                id:"q1",
-                text:"1. 這道算（ 0 ）我還沒學過。\n2. 他表演的（ 1 ）術真厲害。\n3. 老師教我們要（ 2 ）時完成功課。\n4. 我（ 3 ）經做完所有習題了。\n5. 媽媽在（ 4 ）所工作，照顧病人。\n6. 這件事大家都知（ 5 ），沒有秘密。",
-                options:["式","魔","按","已","診","道"],
-                answers:["式","魔","按","已","診","道"]
-            },
-            {
-                id:"q2",
-                text:"7. 小鳥在枝頭（ 0 ）鳴，叫聲悅耳。\n8. 上課要（ 1 ）靜，不能說話。\n9. 弟弟學了幾（ 2 ）鋼琴了。\n10. 這本書的故（ 3 ）非常有趣。\n11. 花園裏種了各（ 4 ）各樣的花。\n12. 他每天（ 5 ）習打字，越來越快。",
-                options:["歌","安","年","事","種","練"],
-                answers:["歌","安","年","事","種","練"]
-            }
-        ]
-    },
-    8: {
-        title: "第八天：量詞大挑戰 🍎",
-        tip: "量詞用來計算人或事物的數量，不同事物要用不同量詞。如：一隻貓、一本書、一朵花。",
-        type: "cloze",
-        audioText: "第八天，量詞大挑戰。請選出最合適的量詞。",
-        questions: [
-            { id:"q1", text:"1. 桌上放着一（ ）花瓶，裏面插了幾朵玫瑰花。", options:["個","條","隻","把"], answer:"個", hint:"花瓶是容器，用甚麼量詞？" },
-            { id:"q2", text:"2. 弟弟養了一（ ）小金魚，每天給牠餵食。", options:["條","個","隻","把"], answer:"條", hint:"魚是長條形的。" },
-            { id:"q3", text:"3. 媽媽送了我一（ ）雨傘，是藍色的。", options:["把","條","個","本"], answer:"把", hint:"有手柄的東西通常用這個量詞。" },
-            { id:"q4", text:"4. 圖書館有很多書，我借了一（ ）故事書。", options:["本","把","條","隻"], answer:"本", hint:"書、筆記本用這個量詞。" },
-            { id:"q5", text:"5. 天上飛過一（ ）小鳥，翅膀是黃色的。", options:["隻","條","個","本"], answer:"隻", hint:"小動物通常用這個量詞。" }
-        ]
-    },
-    9: {
-        title: "第九天：句子排列 「因為……所以……」🪄",
-        tip: "「因為……所以……」是表達原因和結果的句式。記住把句號放在最後！",
-        type: "reorder",
-        audioText: "第九天，句子排列。請把詞語排列成通順的句子。",
-        questions: [
-            { id:"q1", words:["因為下雨","所以","我","帶了雨傘","。"], correct:["因為下雨","所以","我","帶了雨傘","。"], hint:"甚麼原因帶雨傘？" },
-            { id:"q2", words:["因為","天氣很冷","所以","我穿了大衣","。"], correct:["因為","天氣很冷","所以","我穿了大衣","。"], hint:"天氣冷的結果是甚麼？" },
-            { id:"q3", words:["Celine","因為","努力溫習","所以","考了滿分","。"], correct:["Celine","因為","努力溫習","所以","考了滿分","。"], hint:"努力溫習的結果是甚麼？" },
-            { id:"q4", words:["因為","Hayden","肚子餓了","所以","吃了兩碗飯","。"], correct:["因為","Hayden","肚子餓了","所以","吃了兩碗飯","。"], hint:"肚子餓了怎辦？" }
-        ]
-    },
-    10: {
-        title: "第十天：閱讀理解(一) 小蝸牛 🐌",
-        tip: "閱讀時要留意故事的人物、發生的事情和結果。看清楚再選答案！",
-        type: "reading_comp",
-        audioText: "第十天，閱讀理解，小蝸牛。請閱讀短文後回答問題。",
-        passage: "    有一隻小蝸牛，每天都要背着重重的殼爬行，走得非常慢。\n\n    有一天，小鳥問牠：「蝸牛，你走得那麼慢，不嫌累嗎？」\n\n    蝸牛笑着回答：「我雖然走得慢，但是我從來不停下來休息。只要我一直向前走，總有一天會到達目的地的！」\n\n    小鳥聽了，十分敬佩，說：「你說得對！堅持下去才是最重要的！」\n\n    從那天起，小鳥每次飛過，都會對蝸牛說：「加油！你做得到！」",
-        questions: [
-            { id:"q1", qText:"蝸牛每天要背着甚麼爬行？", options:["重重的殼","一個背包","一塊石頭"], answer:"重重的殼" },
-            { id:"q2", qText:"蝸牛為甚麼不停下來休息？", options:["因為牠想一直向前走，到達目的地","因為牠不累","因為牠急着回家"], answer:"因為牠想一直向前走，到達目的地" },
-            { id:"q3", qText:"小鳥聽了蝸牛的話後有甚麼感覺？", options:["十分敬佩","覺得好笑","感到難過"], answer:"十分敬佩" },
-            { id:"q4", qText:"小鳥之後每次飛過，會對蝸牛說甚麼？", options:["加油！你做得到！","你走得太慢了！","快點，別人都超過你了！"], answer:"加油！你做得到！" }
-        ]
-    },
-    11: {
-        title: "第十一天：相反詞 ⚖️",
-        tip: "相反詞是意思相反的詞語。例如：長和短、快和慢、哭和笑。",
-        type: "cloze",
-        audioText: "第十一天，相反詞。請選出正確的相反詞。",
-        questions: [
-            { id:"q1", text:"「胖」的相反詞是（ ）。", options:["瘦","高","大","圓"], answer:"瘦", hint:"胖嘟嘟的反面是？" },
-            { id:"q2", text:"「問」的相反詞是（ ）。", options:["答","說","叫","讀"], answer:"答", hint:"你問我，我來……" },
-            { id:"q3", text:"「哭」的相反詞是（ ）。", options:["笑","跑","跳","唱"], answer:"笑", hint:"傷心哭，開心……" },
-            { id:"q4", text:"「前」的相反詞是（ ）。", options:["後","左","右","上"], answer:"後", hint:"向前走，向……走" },
-            { id:"q5", text:"「黑夜」的相反詞是（ ）。", options:["白晝","早上","傍晚","正午"], answer:"白晝", hint:"黑夜的對面是光明的……" }
-        ]
-    },
-    12: {
-        title: "第十二天：擬聲詞(一) 聲音樂園 🎵",
-        tip: "擬聲詞是模仿聲音的詞語，能讓文章更生動有趣！如：轟隆隆（打雷）、沙沙（樹葉）。",
-        type: "pairing",
-        audioText: "第十二天，擬聲詞，聲音樂園。請選出最合適的擬聲詞填空。",
-        questions: [
-            {
-                id:"q1",
-                text:"1. 廚房裏傳來（ 0 ）的聲音，媽媽正在炒菜。\n2. 小狗一見到主人，就（ 1 ）地叫起來，搖着尾巴。\n3. 外面下大雨，雨點打在窗上（ 2 ）地響。\n4. 公雞在早上（ 3 ）地叫，把我從夢中吵醒。\n5. 小溪（ 4 ）地流過，清澈見底。\n6. 我肚子餓了，肚子（ 5 ）地叫個不停。",
-                options:["噼啪","汪汪","噼哩啪啦","喔喔","潺潺","咕嚕咕嚕"],
-                answers:["噼啪","汪汪","噼哩啪啦","喔喔","潺潺","咕嚕咕嚕"]
-            }
-        ]
-    },
-    13: {
-        title: "第十三天：句子排列 「一邊……一邊……」🪄",
-        tip: "「一邊……一邊……」表示同時做兩件事。記得句號放最後！",
-        type: "reorder",
-        audioText: "第十三天，句子排列，一邊一邊句式。請排列成通順的句子。",
-        questions: [
-            { id:"q1", words:["Hayden","一邊唱歌","一邊跳舞","。"], correct:["Hayden","一邊唱歌","一邊跳舞","。"], hint:"Hayden同時在做哪兩件事？" },
-            { id:"q2", words:["爸爸","一邊看報紙","一邊喝茶","。"], correct:["爸爸","一邊看報紙","一邊喝茶","。"], hint:"爸爸同時做了甚麼？" },
-            { id:"q3", words:["Celine","一邊走路","一邊吃雪糕","。"], correct:["Celine","一邊走路","一邊吃雪糕","。"], hint:"Celine同時在做甚麼？" },
-            { id:"q4", words:["媽媽","一邊煮飯","一邊聽音樂","。"], correct:["媽媽","一邊煮飯","一邊聽音樂","。"], hint:"媽媽同時做了甚麼？" }
-        ]
-    },
-    14: {
-        title: "第十四天：終極挑戰 閱讀理解(二) 🏆",
-        tip: "最後一天了！仔細閱讀，Hayden & Celine 為你加油！",
-        type: "reading_comp",
-        audioText: "第十四天，終極挑戰，閱讀理解。請閱讀短文後回答問題。",
-        passage: "    Hayden 和 Celine 是一對好朋友。\n\n    有一天，他們一起去公園玩。Hayden 最愛玩滑梯，Celine 最愛盪鞦韆。他們玩得非常開心。\n\n    突然，Celine 看見一個小弟弟在哭泣。原來，小弟弟的氣球飛走了，掛在大樹上取不下來。\n\n    Hayden 想了一個辦法。他找來一根長棒子，輕輕地把氣球撥了下來，還給小弟弟。小弟弟笑了，連聲說：「謝謝哥哥！謝謝姐姐！」\n\n    Hayden 和 Celine 看見小弟弟笑了，心裏也感到暖洋洋的。",
-        questions: [
-            { id:"q1", qText:"Hayden 和 Celine 去了哪裏玩？", options:["公園","遊樂場","海灘"], answer:"公園" },
-            { id:"q2", qText:"小弟弟為甚麼在哭泣？", options:["氣球飛走了掛在大樹上","找不到媽媽","跌倒了受傷"], answer:"氣球飛走了掛在大樹上" },
-            { id:"q3", qText:"Hayden 用甚麼方法取回氣球？", options:["用長棒子把氣球撥下來","爬上大樹取下來","叫大人幫忙"], answer:"用長棒子把氣球撥下來" },
-            { id:"q4", qText:"幫助了小弟弟之後，Hayden 和 Celine 有甚麼感覺？", options:["心裏感到暖洋洋的","覺得很累","想繼續玩耍"], answer:"心裏感到暖洋洋的" }
-        ]
-    }
-};
+// --- CURRICULUM DATA ---
+// Each exercise is stored in a plain object to avoid syntax issues
+
+function getExercise(d) {
+    var data = {
+        1: {
+            title: "第一天：字的偏旁 🧩",
+            tip: "漢字由不同的偏旁組合而成。偏旁是構成漢字的基本部件，認識偏旁有助識字！",
+            type: "cloze",
+            audioText: "第一天，字的偏旁。請選出正確的字。",
+            questions: [
+                { id:"q1", text:"氵＋青 ＝ ？", options:["清","請","晴","情"], answer:"清", hint:"與水有關，清水、清潔" },
+                { id:"q2", text:"木 ＋ 交 ＝ ？", options:["校","較","效","皎"], answer:"校", hint:"上學的地方" },
+                { id:"q3", text:"口 ＋ 气 ＝ ？", options:["吃","喝","唱","叫"], answer:"吃", hint:"把食物放進嘴裡" },
+                { id:"q4", text:"人 ＋ 木 ＝ ？", options:["休","体","伏","仙"], answer:"休", hint:"休息、放假" },
+                { id:"q5", text:"心 ＋ 青 ＝ ？", options:["情","清","請","晴"], answer:"情", hint:"感情、心情" }
+            ]
+        },
+        2: {
+            title: "第二天：名詞 農曆新年 🧧",
+            tip: "名詞是人物、地方或事物的名稱。例如：爸爸、香港、禮物。",
+            type: "pairing",
+            audioText: "第二天，名詞，農曆新年。請選詞填空。",
+            questions: [
+                {
+                    id:"q1",
+                    lines: [
+                        { text:"農曆新年到了！[0]帶我去[1]買新衣服。", blanks:2 },
+                        { text:"我選了一件紅色的[2]，因為紅色代表好運。", blanks:1 },
+                        { text:"回到家，[3]在廚房準備[4]，大廳裏擺了[5]，香味四溢。", blanks:3 }
+                    ],
+                    options:["爸爸","商場","外套","媽媽","年夜飯","橘子"],
+                    answers:["爸爸","商場","外套","媽媽","年夜飯","橘子"]
+                },
+                {
+                    id:"q2",
+                    lines: [
+                        { text:"除夕夜，全家人坐在一起看[0]。", blanks:1 },
+                        { text:"到了午夜，外面響起了[1]聲。", blanks:1 },
+                        { text:"第二天就是[2]，親戚朋友都來拜年。", blanks:1 },
+                        { text:"長輩送給我一封[3]，裏面有[4]，我開心極了！", blanks:2 }
+                    ],
+                    options:["電視","鞭炮","大年初一","利是","壓歲錢"],
+                    answers:["電視","鞭炮","大年初一","利是","壓歲錢"]
+                }
+            ]
+        },
+        3: {
+            title: "第三天：動詞 我的一天 🌞",
+            tip: "動詞表示動作或行為，如：走、說、唱。句子中的動詞說明做甚麼。",
+            type: "pairing",
+            audioText: "第三天，動詞，我的一天。請選出正確的動詞填空。",
+            questions: [
+                {
+                    id:"q1",
+                    lines: [
+                        { text:"1. 早上，我[0]了個懶腰，然後[1]牀起來。", blanks:2 },
+                        { text:"2. 媽媽叫我快點[2]臉，否則上學要遲到了。", blanks:1 },
+                        { text:"3. 我把書包[3]好，然後向學校[4]去。", blanks:2 },
+                        { text:"4. 到了學校，同學們都在操場上[5]遊戲。", blanks:1 }
+                    ],
+                    options:["伸","起","洗","整理","走","玩"],
+                    answers:["伸","起","洗","整理","走","玩"]
+                },
+                {
+                    id:"q2",
+                    lines: [
+                        { text:"5. 上課了，老師叫我們[0]書本，認真[1]課。", blanks:2 },
+                        { text:"6. 下課時，同學[2]我一起[3]球。", blanks:2 },
+                        { text:"7. 放學後，媽媽在校門口[4]我，一起[5]回家。", blanks:2 }
+                    ],
+                    options:["翻開","上","約","踢","等","走"],
+                    answers:["翻開","上","約","踢","等","走"]
+                }
+            ]
+        },
+        4: {
+            title: "第四天：形容詞 繽紛世界 🌈",
+            tip: "形容詞用來描述事物的特徵，如大小、顏色、形狀、感覺等。",
+            type: "pairing",
+            audioText: "第四天，形容詞，繽紛世界。請選出最合適的形容詞填空。",
+            questions: [
+                {
+                    id:"q1",
+                    lines: [
+                        { text:"1. 天上的月亮[0]的，像一個大盤子。", blanks:1 },
+                        { text:"2. 弟弟摔倒了，膝蓋很[1]。", blanks:1 },
+                        { text:"3. 外婆煮的湯[2]又[3]，我喝了一碗又一碗。", blanks:2 },
+                        { text:"4. 這條小路[4]得只能讓一個人通過。", blanks:1 },
+                        { text:"5. 夏天的太陽真[5]，我要戴帽子遮陽。", blanks:1 }
+                    ],
+                    options:["圓圓","痛","香","甜","窄","猛烈"],
+                    answers:["圓圓","痛","香","甜","窄","猛烈"]
+                },
+                {
+                    id:"q2",
+                    lines: [
+                        { text:"6. 小貓的毛摸起來[0]又[1]，讓人忍不住想多摸。", blanks:2 },
+                        { text:"7. 這本書的故事非常[2]，我一口氣讀完了。", blanks:1 },
+                        { text:"8. 爸爸的聲音[3]，一說話大家都能聽到。", blanks:1 },
+                        { text:"9. 池塘裏的荷花開得[4]，散發出淡淡的香氣。", blanks:1 }
+                    ],
+                    options:["柔軟","光滑","有趣","洪亮","美麗"],
+                    answers:["柔軟","光滑","有趣","洪亮","美麗"]
+                }
+            ]
+        },
+        5: {
+            title: "第五天：標點符號 逗號和句號 ✍️",
+            tip: "逗號「，」表示句子中間的停頓；句號「。」表示句子完結。",
+            type: "punctuation",
+            audioText: "第五天，標點符號，逗號和句號。請選出正確的標點符號。",
+            questions: [
+                { id:"q1", sentence:"今天是星期六", slots:[{id:"s1",opts:["，","。"],ans:"，"}], after:" 天氣非常晴朗", endSlots:[{id:"s2",opts:["，","。"],ans:"。"}] },
+                { id:"q2", sentence:"小明跑得很快", slots:[{id:"s1",opts:["，","。"],ans:"，"}], after:" 比賽拿了第一名", endSlots:[{id:"s2",opts:["，","。"],ans:"。"}] },
+                { id:"q3", sentence:"媽媽買了蘋果", slots:[{id:"s1",opts:["，","。"],ans:"，"}], after:" 香蕉和橘子", endSlots:[{id:"s2",opts:["，","。"],ans:"。"}] },
+                { id:"q4", sentence:"放學後", slots:[{id:"s1",opts:["，","。"],ans:"，"}], after:" 我做完功課", midSlots:[{id:"s2",opts:["，","。"],ans:"，"}], last:" 再看電視", endSlots:[{id:"s3",opts:["，","。"],ans:"。"}] },
+                { id:"q5", sentence:"爺爺種了玫瑰", slots:[{id:"s1",opts:["，","。"],ans:"，"}], after:" 茉莉和薰衣草", midSlots:[{id:"s2",opts:["，","。"],ans:"，"}], last:" 花園裏香氣撲鼻", endSlots:[{id:"s3",opts:["，","。"],ans:"。"}] }
+            ]
+        },
+        6: {
+            title: "第六天：標點符號 問號和嘆號 ❓❗",
+            tip: "問號「？」用於疑問句結尾；嘆號「！」用於感嘆或命令句結尾。",
+            type: "punctuation",
+            audioText: "第六天，標點符號，問號和嘆號。請選出正確的標點符號。",
+            questions: [
+                { id:"q1", sentence:"你今天吃了甚麼", slots:[{id:"s1",opts:["？","！","。"],ans:"？"}], after:"", endSlots:[] },
+                { id:"q2", sentence:"這朵花真美麗", slots:[{id:"s1",opts:["？","！","。"],ans:"！"}], after:"", endSlots:[] },
+                { id:"q3", sentence:"小心", slots:[{id:"s1",opts:["？","！","。"],ans:"！"}], after:" 那裏有條蛇", endSlots:[{id:"s2",opts:["？","！","。"],ans:"！"}] },
+                { id:"q4", sentence:"請問圖書館在哪裏", slots:[{id:"s1",opts:["？","！","。"],ans:"？"}], after:"", endSlots:[] },
+                { id:"q5", sentence:"哇", slots:[{id:"s1",opts:["？","！","，"],ans:"！"}], after:" 這個蛋糕好大", endSlots:[{id:"s2",opts:["？","！","。"],ans:"！"}] },
+                { id:"q6", sentence:"你知道答案嗎", slots:[{id:"s1",opts:["？","！","。"],ans:"？"}], after:"", endSlots:[] }
+            ]
+        },
+        7: {
+            title: "第七天：分辨同音字 🔤",
+            tip: "同音字是讀音相同但意思和寫法不同的字。要分清楚每個字的意思！",
+            type: "pairing",
+            audioText: "第七天，分辨同音字。請選出正確的字填空。",
+            questions: [
+                {
+                    id:"q1",
+                    lines: [
+                        { text:"1. 這道算[0]我還沒學過。", blanks:1 },
+                        { text:"2. 他表演的[1]術真厲害。", blanks:1 },
+                        { text:"3. 老師教我們要[2]時完成功課。", blanks:1 },
+                        { text:"4. 我[3]經做完所有習題了。", blanks:1 },
+                        { text:"5. 媽媽在[4]所工作，照顧病人。", blanks:1 },
+                        { text:"6. 這件事大家都知[5]，沒有秘密。", blanks:1 }
+                    ],
+                    options:["式","魔","按","已","診","道"],
+                    answers:["式","魔","按","已","診","道"]
+                },
+                {
+                    id:"q2",
+                    lines: [
+                        { text:"7. 小鳥在枝頭[0]鳴，叫聲悅耳。", blanks:1 },
+                        { text:"8. 上課要[1]靜，不能說話。", blanks:1 },
+                        { text:"9. 弟弟學了幾[2]鋼琴了。", blanks:1 },
+                        { text:"10. 這本書的故[3]非常有趣。", blanks:1 },
+                        { text:"11. 花園裏種了各[4]各樣的花。", blanks:1 },
+                        { text:"12. 他每天[5]習打字，越來越快。", blanks:1 }
+                    ],
+                    options:["歌","安","年","事","種","練"],
+                    answers:["歌","安","年","事","種","練"]
+                }
+            ]
+        },
+        8: {
+            title: "第八天：量詞大挑戰 🍎",
+            tip: "量詞用來計算人或事物的數量。不同事物要用不同量詞，如：一隻貓、一本書、一朵花。",
+            type: "cloze",
+            audioText: "第八天，量詞大挑戰。請選出最合適的量詞。",
+            questions: [
+                { id:"q1", text:"1. 桌上放着一（ ）花瓶，裏面插了幾朵玫瑰花。", options:["個","條","隻","把"], answer:"個", hint:"花瓶是容器" },
+                { id:"q2", text:"2. 弟弟養了一（ ）小金魚，每天給牠餵食。", options:["條","個","隻","把"], answer:"條", hint:"魚是長條形的" },
+                { id:"q3", text:"3. 媽媽送了我一（ ）雨傘，是藍色的。", options:["把","條","個","本"], answer:"把", hint:"有手柄的東西" },
+                { id:"q4", text:"4. 我在圖書館借了一（ ）故事書。", options:["本","把","條","隻"], answer:"本", hint:"書、筆記本用這個" },
+                { id:"q5", text:"5. 天上飛過一（ ）小鳥，翅膀是黃色的。", options:["隻","條","個","本"], answer:"隻", hint:"小動物通常用這個" }
+            ]
+        },
+        9: {
+            title: "第九天：句子排列 因為所以 🪄",
+            tip: "「因為……所以……」是表達原因和結果的句式。記住把句號放在最後！",
+            type: "reorder",
+            audioText: "第九天，句子排列。請把詞語排列成通順的句子。",
+            questions: [
+                { id:"q1", words:["因為下雨","所以","我","帶了雨傘","。"], correct:["因為下雨","所以","我","帶了雨傘","。"], hint:"甚麼原因帶雨傘？" },
+                { id:"q2", words:["因為","天氣很冷","所以","我穿了大衣","。"], correct:["因為","天氣很冷","所以","我穿了大衣","。"], hint:"天氣冷的結果是甚麼？" },
+                { id:"q3", words:["Celine","因為","努力溫習","所以","考了滿分","。"], correct:["Celine","因為","努力溫習","所以","考了滿分","。"], hint:"努力溫習的結果是甚麼？" },
+                { id:"q4", words:["因為","Hayden","肚子餓了","所以","吃了兩碗飯","。"], correct:["因為","Hayden","肚子餓了","所以","吃了兩碗飯","。"], hint:"肚子餓了怎辦？" }
+            ]
+        },
+        10: {
+            title: "第十天：閱讀理解 小蝸牛 🐌",
+            tip: "閱讀時要留意故事的人物、發生的事情和結果。看清楚再選答案！",
+            type: "reading_comp",
+            audioText: "第十天，閱讀理解，小蝸牛。請閱讀短文後回答問題。",
+            passage: "    有一隻小蝸牛，每天都要背着重重的殼爬行，走得非常慢。\n\n    有一天，小鳥問牠：「蝸牛，你走得那麼慢，不嫌累嗎？」\n\n    蝸牛笑着回答：「我雖然走得慢，但是我從來不停下來。只要一直向前走，總有一天會到達目的地的！」\n\n    小鳥十分敬佩，說：「你說得對！堅持下去才是最重要的！」\n\n    從那天起，小鳥每次飛過，都會對蝸牛說：「加油！你做得到！」",
+            questions: [
+                { id:"q1", qText:"蝸牛每天要背着甚麼爬行？", options:["重重的殼","一個背包","一塊石頭"], answer:"重重的殼" },
+                { id:"q2", qText:"蝸牛為甚麼不停下來？", options:["牠想一直向前走到達目的地","因為牠不累","因為牠急着回家"], answer:"牠想一直向前走到達目的地" },
+                { id:"q3", qText:"小鳥聽了蝸牛的話後有甚麼感覺？", options:["十分敬佩","覺得好笑","感到難過"], answer:"十分敬佩" },
+                { id:"q4", qText:"小鳥之後每次飛過，會對蝸牛說甚麼？", options:["加油！你做得到！","你走得太慢了！","快點別人超過你了！"], answer:"加油！你做得到！" }
+            ]
+        },
+        11: {
+            title: "第十一天：相反詞 ⚖️",
+            tip: "相反詞是意思相反的詞語。例如：長和短、快和慢、哭和笑。",
+            type: "cloze",
+            audioText: "第十一天，相反詞。請選出正確的相反詞。",
+            questions: [
+                { id:"q1", text:"「胖」的相反詞是（ ）。", options:["瘦","高","大","圓"], answer:"瘦", hint:"胖嘟嘟的反面是？" },
+                { id:"q2", text:"「問」的相反詞是（ ）。", options:["答","說","叫","讀"], answer:"答", hint:"你問我，我來……" },
+                { id:"q3", text:"「哭」的相反詞是（ ）。", options:["笑","跑","跳","唱"], answer:"笑", hint:"傷心哭，開心……" },
+                { id:"q4", text:"「前」的相反詞是（ ）。", options:["後","左","右","上"], answer:"後", hint:"向前走，向……走" },
+                { id:"q5", text:"「黑夜」的相反詞是（ ）。", options:["白晝","早上","傍晚","正午"], answer:"白晝", hint:"黑夜的對面是光明的……" }
+            ]
+        },
+        12: {
+            title: "第十二天：擬聲詞 聲音樂園 🎵",
+            tip: "擬聲詞是模仿聲音的詞語，能讓文章更生動有趣！如：轟隆隆（打雷）、沙沙（樹葉）。",
+            type: "pairing",
+            audioText: "第十二天，擬聲詞，聲音樂園。請選出最合適的擬聲詞填空。",
+            questions: [
+                {
+                    id:"q1",
+                    lines: [
+                        { text:"1. 廚房裏傳來[0]的聲音，媽媽正在炒菜。", blanks:1 },
+                        { text:"2. 小狗一見到主人，就[1]地叫起來。", blanks:1 },
+                        { text:"3. 外面下大雨，雨點打在窗上[2]地響。", blanks:1 },
+                        { text:"4. 公雞在早上[3]地叫，把我從夢中吵醒。", blanks:1 },
+                        { text:"5. 小溪[4]地流過，清澈見底。", blanks:1 },
+                        { text:"6. 我肚子餓了，肚子[5]地叫個不停。", blanks:1 }
+                    ],
+                    options:["噼啪","汪汪","噼哩啪啦","喔喔","潺潺","咕嚕咕嚕"],
+                    answers:["噼啪","汪汪","噼哩啪啦","喔喔","潺潺","咕嚕咕嚕"]
+                }
+            ]
+        },
+        13: {
+            title: "第十三天：句子排列 一邊一邊 🪄",
+            tip: "「一邊……一邊……」表示同時做兩件事。記得句號放最後！",
+            type: "reorder",
+            audioText: "第十三天，句子排列，一邊一邊句式。請排列成通順的句子。",
+            questions: [
+                { id:"q1", words:["Hayden","一邊唱歌","一邊跳舞","。"], correct:["Hayden","一邊唱歌","一邊跳舞","。"], hint:"Hayden同時在做哪兩件事？" },
+                { id:"q2", words:["爸爸","一邊看報紙","一邊喝茶","。"], correct:["爸爸","一邊看報紙","一邊喝茶","。"], hint:"爸爸同時做了甚麼？" },
+                { id:"q3", words:["Celine","一邊走路","一邊吃雪糕","。"], correct:["Celine","一邊走路","一邊吃雪糕","。"], hint:"Celine同時在做甚麼？" },
+                { id:"q4", words:["媽媽","一邊煮飯","一邊聽音樂","。"], correct:["媽媽","一邊煮飯","一邊聽音樂","。"], hint:"媽媽同時做了甚麼？" }
+            ]
+        },
+        14: {
+            title: "第十四天：終極挑戰 閱讀理解 🏆",
+            tip: "最後一天了！仔細閱讀，Hayden 和 Celine 為你加油！",
+            type: "reading_comp",
+            audioText: "第十四天，終極挑戰，閱讀理解。請閱讀短文後回答問題。",
+            passage: "    Hayden 和 Celine 是一對好朋友。\n\n    有一天，他們一起去公園玩。Hayden 最愛玩滑梯，Celine 最愛盪鞦韆。他們玩得非常開心。\n\n    突然，Celine 看見一個小弟弟在哭泣。原來小弟弟的氣球飛走了，掛在大樹上取不下來。\n\n    Hayden 想了一個辦法。他找來一根長棒子，輕輕地把氣球撥了下來，還給小弟弟。小弟弟笑了，說：「謝謝哥哥！謝謝姐姐！」\n\n    Hayden 和 Celine 看見小弟弟笑了，心裏也感到暖洋洋的。",
+            questions: [
+                { id:"q1", qText:"Hayden 和 Celine 去了哪裏玩？", options:["公園","遊樂場","海灘"], answer:"公園" },
+                { id:"q2", qText:"小弟弟為甚麼在哭泣？", options:["氣球飛走了掛在樹上","找不到媽媽","跌倒了受傷"], answer:"氣球飛走了掛在樹上" },
+                { id:"q3", qText:"Hayden 用甚麼方法取回氣球？", options:["用長棒子把氣球撥下來","爬上大樹取下來","叫大人幫忙"], answer:"用長棒子把氣球撥下來" },
+                { id:"q4", qText:"幫助了小弟弟之後，他們有甚麼感覺？", options:["心裏感到暖洋洋的","覺得很累","想繼續玩耍"], answer:"心裏感到暖洋洋的" }
+            ]
+        }
+    };
+    return data[d] || null;
+}
 
 // --- INIT ---
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', function() {
     loadState();
     buildCalendar();
     loadExercise(currentDay);
-    setFont(localStorage.getItem('hc_font') || 'normal');
-
+    var savedFont = localStorage.getItem('hc_font') || 'normal';
+    applyFont(savedFont);
     if ('speechSynthesis' in window) {
         window.speechSynthesis.getVoices();
-        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
     }
 });
 
-window.addEventListener('click', () => {
+window.addEventListener('click', function() {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 }, { once: true });
 
-// --- STATE MANAGEMENT ---
+// --- STATE ---
 function loadState() {
     try { progress = JSON.parse(localStorage.getItem('hc_progress') || '{}'); } catch(e) { progress = {}; }
-    const lang = localStorage.getItem('hc_lang');
+    var lang = localStorage.getItem('hc_lang');
     if (lang) document.getElementById('tts-lang').value = lang;
     updateStars();
 }
@@ -675,8 +603,8 @@ function saveState() {
 }
 
 function updateStars() {
-    let count = 0;
-    for (let i = 1; i <= 14; i++) { if (progress[i]) count++; }
+    var count = 0;
+    for (var i = 1; i <= 14; i++) { if (progress[i]) count++; }
     document.getElementById('star-count').textContent = count;
 }
 
@@ -688,43 +616,45 @@ function resetAll() {
     saveState();
     buildCalendar();
     loadExercise(1);
-    setMascot('neutral', '👋 一切從頭開始！Hayden 和 Celine 陪你一起加油！');
+    setMascot('neutral', '一切從頭開始！Hayden 和 Celine 陪你一起加油！');
 }
 
 // --- FONT ---
 function setFont(mode) {
     playSound('click');
     localStorage.setItem('hc_font', mode);
-    document.querySelectorAll('.font-btn').forEach(b => {
+    applyFont(mode);
+}
+
+function applyFont(mode) {
+    document.querySelectorAll('.font-btn').forEach(function(b) {
         b.className = 'font-btn px-3 py-1 text-xs font-black rounded-full text-purple-600 hover:bg-purple-100 transition-all';
     });
-    const activeBtn = document.getElementById('font-' + mode);
-    if (activeBtn) activeBtn.className = 'font-btn px-3 py-1 text-xs font-black rounded-full bg-purple-500 text-white transition-all';
-    document.getElementById('main-area').style.fontSize = mode === 'large' ? '1.35rem' : '1rem';
+    var btn = document.getElementById('font-' + mode);
+    if (btn) btn.className = 'font-btn px-3 py-1 text-xs font-black rounded-full bg-purple-500 text-white transition-all';
+    document.getElementById('main-area').style.fontSize = (mode === 'large') ? '1.35rem' : '1rem';
 }
 
 // --- CALENDAR ---
 function buildCalendar() {
-    const grid = document.getElementById('calendar-grid');
+    var grid = document.getElementById('calendar-grid');
+    if (!grid) return;
     grid.innerHTML = '';
-    for (let d = 1; d <= 14; d++) {
-        const done = !!progress[d];
-        const active = d === currentDay;
-        const icon = dayIcons[d - 1];
-        let cls = 'relative flex flex-col items-center justify-center p-2 rounded-xl border-2 shadow-sm transition-all btn-press cursor-pointer ';
-        if (active) cls += 'bg-purple-500 border-purple-600 text-white scale-105 z-10';
+    for (var d = 1; d <= 14; d++) {
+        var done = !!progress[d];
+        var active = (d === currentDay);
+        var icon = dayIcons[d - 1];
+        var el = document.createElement('div');
+        var cls = 'relative flex flex-col items-center justify-center p-2 rounded-xl border-2 shadow-sm transition-all cursor-pointer ';
+        if (active) cls += 'bg-purple-500 border-purple-600 text-white';
         else if (done) cls += 'bg-purple-50 border-purple-200 text-purple-700';
         else cls += 'bg-white border-slate-200 text-slate-600 hover:bg-purple-50';
-
-        const el = document.createElement('div');
         el.className = cls;
-        el.onclick = () => selectDay(d);
-        el.innerHTML = `
-            \${done ? '<span class="absolute top-0.5 right-0.5 text-amber-400 text-[10px]"><i class="fa-solid fa-star"></i></span>' : ''}
-            <span class="text-lg">\${icon}</span>
-            <span class="text-[9px] opacity-70 uppercase">Day</span>
-            <span class="text-sm font-black">\${d}</span>
-        `;
+        el.innerHTML = (done ? '<span class="absolute top-0.5 right-0.5 text-amber-400 text-xs"><i class="fa-solid fa-star"></i></span>' : '') +
+            '<span class="text-lg">' + icon + '</span>' +
+            '<span class="text-xs opacity-70">Day</span>' +
+            '<span class="text-sm font-black">' + d + '</span>';
+        (function(day) { el.onclick = function() { selectDay(day); }; })(d);
         grid.appendChild(el);
     }
 }
@@ -736,23 +666,32 @@ function selectDay(d) {
     reorderState = {};
     buildCalendar();
     loadExercise(d);
-    setMascot('thinking', `📖 第 \${d} 天來了！仔細看清楚題目，你一定可以的！`);
+    setMascot('thinking', '第 ' + d + ' 天來了！仔細看清楚題目，你一定可以的！');
 }
 
 // --- LOAD EXERCISE ---
 function loadExercise(d) {
-    const ex = exercises[d];
-    if (!ex) return;
+    var ex = getExercise(d);
+    if (!ex) { console.error('Exercise not found for day', d); return; }
 
-    document.getElementById('day-badge').textContent = `第 \${d} 天挑戰`;
+    document.getElementById('day-badge').textContent = '第 ' + d + ' 天挑戰';
     document.getElementById('ex-title').textContent = ex.title;
-    document.getElementById('ex-tip').innerHTML = `<strong>💡 精讀小秘訣：</strong>\${ex.tip}`;
+    document.getElementById('ex-tip').innerHTML = '<strong>💡 精讀小秘訣：</strong>' + ex.tip;
 
-    document.getElementById('submit-btn').classList.toggle('hidden', revealed);
-    document.getElementById('next-btn').classList.toggle('hidden', !revealed);
-    document.getElementById('status-msg').classList.add('hidden');
+    var submitBtn = document.getElementById('submit-btn');
+    var nextBtn = document.getElementById('next-btn');
+    var statusMsg = document.getElementById('status-msg');
 
-    const ws = document.getElementById('workspace');
+    if (revealed) {
+        submitBtn.style.display = 'none';
+        nextBtn.classList.remove('hidden');
+    } else {
+        submitBtn.style.display = '';
+        nextBtn.classList.add('hidden');
+    }
+    statusMsg.classList.add('hidden');
+
+    var ws = document.getElementById('workspace');
     ws.innerHTML = '';
 
     if (ex.type === 'cloze') renderCloze(ex, ws);
@@ -762,16 +701,16 @@ function loadExercise(d) {
     else if (ex.type === 'reading_comp') renderReading(ex, ws);
 }
 
-// --- ANSWER STATE HELPERS ---
-function getAnswer(qId, sub) {
-    const key = `\${currentDay}_\${qId}`;
-    const val = userAnswers[key];
+// --- ANSWER HELPERS ---
+function getAns(qId, sub) {
+    var key = currentDay + '_' + qId;
+    var val = userAnswers[key];
     if (sub !== undefined) return (val && typeof val === 'object') ? (val[sub] || '') : '';
     return (typeof val === 'string') ? val : '';
 }
 
-function setAnswer(qId, val, sub) {
-    const key = `\${currentDay}_\${qId}`;
+function setAns(qId, val, sub) {
+    var key = currentDay + '_' + qId;
     if (sub !== undefined) {
         if (!userAnswers[key] || typeof userAnswers[key] !== 'object') userAnswers[key] = {};
         userAnswers[key][sub] = val;
@@ -780,457 +719,573 @@ function setAnswer(qId, val, sub) {
     }
 }
 
-// --- RENDER: CLOZE ---
+// --- RENDER CLOZE ---
 function renderCloze(ex, ws) {
-    const wrap = document.createElement('div');
+    var wrap = document.createElement('div');
     wrap.className = 'space-y-3';
 
-    ex.questions.forEach((q, i) => {
-        const card = document.createElement('div');
+    for (var i = 0; i < ex.questions.length; i++) {
+        var q = ex.questions[i];
+        var saved = getAns(q.id);
+        var card = document.createElement('div');
         card.className = 'p-4 bg-slate-50 rounded-xl border-2 border-slate-100 space-y-3';
 
-        const saved = getAnswer(q.id);
-        const display = revealed ? q.answer : (saved || '？');
-        const underlineCls = revealed
-            ? (saved === q.answer ? 'text-emerald-600 border-emerald-400 font-black' : 'text-red-600 border-red-400 font-black')
-            : 'text-purple-600 border-purple-400 font-black';
+        // Display line
+        var display = revealed ? q.answer : (saved || '？');
+        var spanCls = 'border-b-2 px-3 inline-block font-black ';
+        if (revealed) spanCls += (saved === q.answer) ? 'text-emerald-600 border-emerald-400' : 'text-red-600 border-red-400';
+        else spanCls += 'text-purple-600 border-purple-400';
 
-        card.innerHTML = `
-            <div class="flex items-start justify-between gap-2 flex-wrap">
-                <div class="flex items-start gap-2 flex-grow">
-                    <span class="bg-purple-500 text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">\${i+1}</span>
-                    <span class="font-bold text-slate-800">
-                        \${q.text.replace('（ ）', '')} 
-                        <span id="cloze-ans-\${q.id}" class="border-b-2 px-3 inline-block \${underlineCls}">\${display}</span>
-                    </span>
-                </div>
-                <button onclick="speakText('\${q.text.replace(/'/g,"$'")}');" class="text-xs text-purple-600 bg-purple-50 border border-purple-200 px-2 py-1 rounded-full flex items-center gap-1 hover:bg-purple-100 flex-shrink-0">
-                    <i class="fa-solid fa-volume-high"></i> 讀題
-                </button>
-            </div>
-        `;
+        var row = document.createElement('div');
+        row.className = 'flex items-start justify-between gap-2 flex-wrap';
 
-        const grid = document.createElement('div');
+        var textDiv = document.createElement('div');
+        textDiv.className = 'flex items-start gap-2 flex-grow';
+        textDiv.innerHTML = '<span class="bg-purple-500 text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">' + (i+1) + '</span>' +
+            '<span class="font-bold text-slate-800">' + q.text.replace('（ ）', '') + ' <span id="ca-' + q.id + '" class="' + spanCls + '">' + display + '</span></span>';
+        row.appendChild(textDiv);
+
+        var ttsBtn = document.createElement('button');
+        ttsBtn.className = 'text-xs text-purple-600 bg-purple-50 border border-purple-200 px-2 py-1 rounded-full flex items-center gap-1 hover:bg-purple-100 flex-shrink-0';
+        ttsBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i> 讀題';
+        (function(qt) { ttsBtn.onclick = function() { speakText(qt); }; })(q.text);
+        row.appendChild(ttsBtn);
+        card.appendChild(row);
+
+        // Option buttons
+        var grid = document.createElement('div');
         grid.className = 'grid grid-cols-2 md:grid-cols-4 gap-2';
-        const opts = shuffle(q.options);
-        opts.forEach(opt => {
-            const btn = document.createElement('button');
-            let cls = 'py-2 px-3 rounded-xl border-2 font-black text-sm transition-all btn-press ';
+        var opts = shuffle(q.options);
+        for (var oi = 0; oi < opts.length; oi++) {
+            var opt = opts[oi];
+            var btn = document.createElement('button');
+            var bcls = 'py-2 px-3 rounded-xl border-2 font-black text-sm transition-all ';
             if (revealed) {
-                if (opt === q.answer) cls += 'bg-emerald-500 text-white border-emerald-600';
-                else if (opt === saved) cls += 'bg-red-400 text-white border-red-500';
-                else cls += 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed';
+                if (opt === q.answer) bcls += 'bg-emerald-500 text-white border-emerald-600';
+                else if (opt === saved) bcls += 'bg-red-400 text-white border-red-500';
+                else bcls += 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed';
                 btn.disabled = true;
             } else if (saved === opt) {
-                cls += 'bg-purple-500 text-white border-purple-600';
+                bcls += 'bg-purple-500 text-white border-purple-600';
             } else {
-                cls += 'bg-white text-slate-700 border-slate-200 hover:bg-purple-50';
+                bcls += 'bg-white text-slate-700 border-slate-200 hover:bg-purple-50';
             }
-            btn.className = cls;
+            btn.className = bcls;
             btn.textContent = opt;
-            if (!revealed) btn.onclick = () => pickCloze(q.id, opt);
+            if (!revealed) {
+                (function(qid, o) {
+                    btn.onclick = function() { pickCloze(qid, o); };
+                })(q.id, opt);
+            }
             grid.appendChild(btn);
-        });
+        }
         card.appendChild(grid);
 
         if (q.hint && !revealed) {
-            const hint = document.createElement('p');
+            var hint = document.createElement('p');
             hint.className = 'text-xs text-purple-400 font-bold flex items-center gap-1';
-            hint.innerHTML = `<i class="fa-solid fa-lightbulb"></i> 提示：\${q.hint}`;
+            hint.innerHTML = '<i class="fa-solid fa-lightbulb"></i> 提示：' + q.hint;
             card.appendChild(hint);
         }
-
         wrap.appendChild(card);
-    });
+    }
     ws.appendChild(wrap);
 }
 
 function pickCloze(qId, val) {
     if (revealed) return;
     playSound('click');
-    setAnswer(qId, val);
-    const span = document.getElementById('cloze-ans-' + qId);
-    if (span) span.textContent = val;
+    setAns(qId, val);
+    var sp = document.getElementById('ca-' + qId);
+    if (sp) sp.textContent = val;
+    // Re-render to update button states
     loadExercise(currentDay);
-    setMascot('thinking', `🤔 你選了「\${val}」，繼續填完其他題目！`);
+    setMascot('thinking', '你選了「' + val + '」，繼續填完其他題目！');
 }
 
-// --- RENDER: PAIRING ---
+// --- RENDER PAIRING ---
 function renderPairing(ex, ws) {
-    const wrap = document.createElement('div');
+    var wrap = document.createElement('div');
     wrap.className = 'space-y-4';
 
-    ex.questions.forEach(q => {
-        const card = document.createElement('div');
-        card.className = 'p-5 rounded-2xl border-2 border-slate-100 bg-slate-50/50 space-y-1';
+    for (var qi = 0; qi < ex.questions.length; qi++) {
+        var q = ex.questions[qi];
+        var card = document.createElement('div');
+        card.className = 'p-5 rounded-2xl border-2 border-slate-100 bg-slate-50 space-y-1';
 
-        const lines = q.text.split('\n');
-        const opts = shuffle(q.options);
-        let totalIdx = 0;
+        var opts = shuffle(q.options);
+        var ansIdx = 0;
 
-        lines.forEach(line => {
-            const row = document.createElement('div');
+        for (var li = 0; li < q.lines.length; li++) {
+            var lineData = q.lines[li];
+            var lineText = lineData.text;
+            var row = document.createElement('div');
             row.className = 'py-2 border-b border-dashed border-purple-100 last:border-0 flex flex-wrap items-center justify-between gap-2';
 
-            const textPart = document.createElement('div');
-            textPart.className = 'leading-loose font-bold text-slate-800 flex-grow flex flex-wrap items-center gap-1';
+            var textDiv = document.createElement('div');
+            textDiv.className = 'font-bold text-slate-800 flex-grow flex flex-wrap items-center leading-loose';
 
-            const segments = line.split(/（\s*\d+\s*）/);
-            segments.forEach((seg, si) => {
-                const span = document.createElement('span');
-                span.textContent = seg;
-                textPart.appendChild(span);
-
-                if (si < segments.length - 1) {
-                    const idx = totalIdx;
-                    const saved = getAnswer(q.id, idx);
-                    const expected = q.answers[idx];
-
-                    const sel = document.createElement('select');
-                    sel.className = 'slot-select' + (revealed ? (saved === expected ? ' correct' : ' wrong') : (saved ? ' answered' : ''));
-
-                    const def = document.createElement('option');
-                    def.value = '';
-                    def.textContent = revealed ? expected : '選擇';
-                    sel.appendChild(def);
-
-                    opts.forEach(o => {
-                        const oel = document.createElement('option');
-                        oel.value = o; oel.textContent = o;
-                        if (revealed ? o === expected : o === saved) oel.selected = true;
-                        sel.appendChild(oel);
-                    });
-
+            // Parse [0], [1] etc.
+            var parts = lineText.split(/\[(\d+)\]/);
+            for (var pi = 0; pi < parts.length; pi++) {
+                var part = parts[pi];
+                if (/^\d+\$/.test(part)) {
+                    // This is a slot index
+                    var slotIdx = parseInt(part);
+                    var saved = getAns(q.id, slotIdx);
+                    var expected = q.answers[slotIdx];
+                    var sel = document.createElement('select');
+                    var sCls = 'slot-select';
+                    if (revealed) sCls += (saved === expected) ? ' correct-slot' : ' wrong-slot';
+                    else if (saved) sCls += ' answered';
+                    sel.className = sCls;
                     if (revealed) sel.disabled = true;
-                    else sel.onchange = () => { playSound('click'); setAnswer(q.id, sel.value, idx); sel.className = 'slot-select answered'; setMascot('thinking', `好！填了「\${sel.value}」，繼續加油！`); };
 
-                    textPart.appendChild(sel);
-                    totalIdx++;
+                    var defOpt = document.createElement('option');
+                    defOpt.value = '';
+                    defOpt.textContent = revealed ? expected : '選擇';
+                    sel.appendChild(defOpt);
+
+                    for (var oi2 = 0; oi2 < opts.length; oi2++) {
+                        var o = opts[oi2];
+                        var oEl = document.createElement('option');
+                        oEl.value = o; oEl.textContent = o;
+                        if (revealed ? o === expected : o === saved) oEl.selected = true;
+                        sel.appendChild(oEl);
+                    }
+
+                    if (!revealed) {
+                        (function(qid, sidx, selEl) {
+                            selEl.onchange = function() {
+                                playSound('click');
+                                setAns(qid, selEl.value, sidx);
+                                selEl.className = 'slot-select answered';
+                                setMascot('thinking', '好！填了「' + selEl.value + '」，繼續加油！');
+                            };
+                        })(q.id, slotIdx, sel);
+                    }
+                    textDiv.appendChild(sel);
+                } else {
+                    var span = document.createElement('span');
+                    span.textContent = part;
+                    textDiv.appendChild(span);
                 }
-            });
+            }
 
-            row.appendChild(textPart);
+            row.appendChild(textDiv);
 
-            const ttsBtn = document.createElement('button');
-            ttsBtn.className = 'text-xs text-purple-600 bg-purple-50 border border-purple-200 px-2 py-1 rounded-full hover:bg-purple-100 font-bold flex items-center gap-1 flex-shrink-0';
-            ttsBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i> 讀';
-            const cleanLine = line.replace(/（\s*\d+\s*）/g, ' 填空 ');
-            ttsBtn.onclick = () => speakText(cleanLine);
-            row.appendChild(ttsBtn);
-
+            var tBtn = document.createElement('button');
+            tBtn.className = 'text-xs text-purple-600 bg-purple-50 border border-purple-200 px-2 py-1 rounded-full hover:bg-purple-100 font-bold flex items-center gap-1 flex-shrink-0';
+            tBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+            var cleanLine = lineText.replace(/\[\d+\]/g, ' 填空 ');
+            (function(lt) { tBtn.onclick = function() { speakText(lt); }; })(cleanLine);
+            row.appendChild(tBtn);
             card.appendChild(row);
-        });
-
+        }
         wrap.appendChild(card);
-    });
+    }
     ws.appendChild(wrap);
 }
 
-// --- RENDER: PUNCTUATION ---
+// --- RENDER PUNCTUATION ---
 function renderPunctuation(ex, ws) {
-    const wrap = document.createElement('div');
+    var wrap = document.createElement('div');
     wrap.className = 'space-y-3';
 
-    // Group questions into display blocks
-    ex.questions.forEach(q => {
-        const card = document.createElement('div');
-        card.className = 'p-4 bg-slate-50 rounded-xl border-2 border-slate-100 leading-loose font-bold text-slate-800';
+    for (var qi = 0; qi < ex.questions.length; qi++) {
+        var q = ex.questions[qi];
+        var card = document.createElement('div');
+        card.className = 'p-4 bg-slate-50 rounded-xl border-2 border-slate-100 font-bold text-slate-800 leading-loose text-base';
 
-        q.parts.forEach(p => {
-            if (p.text) {
-                const span = document.createElement('span');
-                span.textContent = p.text;
-                card.appendChild(span);
-            } else if (p.slotId) {
-                const saved = getAnswer(q.id, p.slotId);
-                const sel = document.createElement('select');
-                sel.className = 'slot-select' + (revealed ? (saved === p.answer ? ' correct' : ' wrong') : (saved ? ' answered' : ''));
+        // Number badge
+        var nbadge = document.createElement('span');
+        nbadge.className = 'inline-flex items-center justify-center bg-purple-500 text-white text-xs font-black rounded-full w-5 h-5 mr-2 align-middle';
+        nbadge.textContent = qi + 1;
+        card.appendChild(nbadge);
 
-                const def = document.createElement('option');
-                def.value = '';
-                def.textContent = revealed ? p.answer : '？';
-                sel.appendChild(def);
+        // Sentence text
+        var sentSpan = document.createElement('span');
+        sentSpan.textContent = q.sentence;
+        card.appendChild(sentSpan);
 
-                const shuffledPuncs = shuffle(p.options);
-                shuffledPuncs.forEach(o => {
-                    const oel = document.createElement('option');
-                    oel.value = o; oel.textContent = o;
-                    if (revealed ? o === p.answer : o === saved) oel.selected = true;
-                    sel.appendChild(oel);
-                });
+        // First slots
+        appendPuncSlots(card, q.slots, q.id);
 
-                if (revealed) sel.disabled = true;
-                else sel.onchange = () => {
-                    playSound('click');
-                    setAnswer(q.id, sel.value, p.slotId);
-                    sel.className = 'slot-select answered';
-                    setMascot('thinking', `標點符號選了「\${sel.value}」！繼續！`);
-                };
-                card.appendChild(sel);
-            }
-        });
+        // After text
+        if (q.after) {
+            var afterSpan = document.createElement('span');
+            afterSpan.textContent = q.after;
+            card.appendChild(afterSpan);
+        }
+
+        // Mid slots
+        if (q.midSlots) appendPuncSlots(card, q.midSlots, q.id);
+
+        // Last text
+        if (q.last) {
+            var lastSpan = document.createElement('span');
+            lastSpan.textContent = q.last;
+            card.appendChild(lastSpan);
+        }
+
+        // End slots
+        if (q.endSlots && q.endSlots.length > 0) appendPuncSlots(card, q.endSlots, q.id);
 
         ws.appendChild(card);
-    });
+    }
 }
 
-// --- RENDER: REORDER ---
+function appendPuncSlots(container, slots, qId) {
+    if (!slots) return;
+    for (var si = 0; si < slots.length; si++) {
+        var s = slots[si];
+        var saved = getAns(qId, s.id);
+        var sel = document.createElement('select');
+        var sCls = 'slot-select';
+        if (revealed) sCls += (saved === s.ans) ? ' correct-slot' : ' wrong-slot';
+        else if (saved) sCls += ' answered';
+        sel.className = sCls;
+        if (revealed) sel.disabled = true;
+
+        var defOpt = document.createElement('option');
+        defOpt.value = '';
+        defOpt.textContent = revealed ? s.ans : '？';
+        sel.appendChild(defOpt);
+
+        var shuffledOpts = shuffle(s.opts);
+        for (var oi = 0; oi < shuffledOpts.length; oi++) {
+            var o = shuffledOpts[oi];
+            var oEl = document.createElement('option');
+            oEl.value = o; oEl.textContent = o;
+            if (revealed ? o === s.ans : o === saved) oEl.selected = true;
+            sel.appendChild(oEl);
+        }
+
+        if (!revealed) {
+            (function(qid, sid, selEl, correctAns) {
+                selEl.onchange = function() {
+                    playSound('click');
+                    setAns(qid, selEl.value, sid);
+                    selEl.className = 'slot-select answered';
+                    setMascot('thinking', '標點符號選了「' + selEl.value + '」！繼續！');
+                };
+            })(qId, s.id, sel, s.ans);
+        }
+        container.appendChild(sel);
+    }
+}
+
+// --- RENDER REORDER ---
 function renderReorder(ex, ws) {
-    const wrap = document.createElement('div');
+    var wrap = document.createElement('div');
     wrap.className = 'space-y-5';
 
-    ex.questions.forEach((q, i) => {
+    for (var qi = 0; qi < ex.questions.length; qi++) {
+        var q = ex.questions[qi];
         if (!reorderState[q.id]) reorderState[q.id] = [];
 
-        const card = document.createElement('div');
-        card.className = 'p-5 rounded-2xl border-2 border-slate-100 bg-slate-50/50 space-y-3';
+        var card = document.createElement('div');
+        card.className = 'p-5 rounded-2xl border-2 border-slate-100 bg-slate-50 space-y-3';
 
-        const header = document.createElement('div');
+        var header = document.createElement('div');
         header.className = 'flex items-center justify-between';
-        header.innerHTML = `
-            <div class="flex items-center gap-2">
-                <span class="bg-purple-500 text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center">\${i+1}</span>
-                <span class="font-black text-slate-700">請排列成通順的句子：</span>
-            </div>
-            \${!revealed ? `<button onclick="clearReorder('\${q.id}')" class="text-xs text-red-500 bg-red-50 border border-red-200 px-2 py-1 rounded-full hover:bg-red-100 font-bold"><i class="fa-solid fa-rotate-left"></i> 清除</button>` : ''}
-        `;
+        var headerLeft = document.createElement('div');
+        headerLeft.className = 'flex items-center gap-2';
+        headerLeft.innerHTML = '<span class="bg-purple-500 text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center">' + (qi+1) + '</span>' +
+            '<span class="font-black text-slate-700">請排列成通順的句子：</span>';
+        header.appendChild(headerLeft);
+
+        if (!revealed) {
+            var clearBtn = document.createElement('button');
+            clearBtn.className = 'text-xs text-red-500 bg-red-50 border border-red-200 px-2 py-1 rounded-full hover:bg-red-100 font-bold';
+            clearBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> 清除';
+            (function(qid) { clearBtn.onclick = function() { clearReorder(qid); }; })(q.id);
+            header.appendChild(clearBtn);
+        }
         card.appendChild(header);
 
-        // Target zone
-        const target = document.createElement('div');
-        target.id = `rtarget-\${q.id}`;
-        target.className = 'min-h-16 p-3 rounded-xl border-2 border-dashed border-purple-200 bg-purple-50/20 flex flex-wrap gap-2 items-center';
+        // Target
+        var target = document.createElement('div');
+        target.id = 'rt-' + q.id;
+        target.className = 'min-h-16 p-3 rounded-xl border-2 border-dashed border-purple-200 bg-purple-50 flex flex-wrap gap-2 items-center';
         card.appendChild(target);
 
-        // Source zone
-        const source = document.createElement('div');
-        source.className = 'flex flex-wrap gap-2 justify-center pt-1';
+        // Source
+        var source = document.createElement('div');
+        source.className = 'flex flex-wrap gap-2 justify-center';
+        var pool = shuffle(q.words.map(function(w, idx) { return { w: w, idx: idx }; }));
 
-        const pool = shuffle(q.words.map((w, idx) => ({ w, idx })));
-        pool.forEach(item => {
-            const btn = document.createElement('button');
-            btn.id = `rbubble-\${q.id}-\${item.idx}`;
-            const alreadySelected = reorderState[q.id].some(s => s.idx === item.idx);
-
-            if (revealed || alreadySelected) {
+        for (var pi = 0; pi < pool.length; pi++) {
+            var item = pool[pi];
+            var btn = document.createElement('button');
+            btn.id = 'rb-' + q.id + '-' + item.idx;
+            var alreadySel = false;
+            for (var si = 0; si < reorderState[q.id].length; si++) {
+                if (reorderState[q.id][si].idx === item.idx) { alreadySel = true; break; }
+            }
+            if (revealed || alreadySel) {
                 btn.className = 'bg-slate-100 text-slate-400 border-2 border-slate-200 px-4 py-2 rounded-xl font-black text-sm opacity-50 cursor-not-allowed';
                 btn.disabled = true;
             } else {
-                btn.className = 'bg-white text-purple-800 border-2 border-purple-200 px-4 py-2 rounded-xl font-black text-sm hover:bg-purple-50 hover:-translate-y-0.5 transition-all btn-press';
-                btn.onclick = () => clickReorder(q.id, item.idx, item.w);
+                btn.className = 'bg-white text-purple-800 border-2 border-purple-200 px-4 py-2 rounded-xl font-black text-sm hover:bg-purple-50 transition-all';
+                (function(qid, bidx, bw) {
+                    btn.onclick = function() { clickReorder(qid, bidx, bw); };
+                })(q.id, item.idx, item.w);
             }
             btn.textContent = item.w;
             source.appendChild(btn);
-        });
+        }
         card.appendChild(source);
 
         if (q.hint && !revealed) {
-            const hintEl = document.createElement('p');
+            var hintEl = document.createElement('p');
             hintEl.className = 'text-xs text-purple-400 font-bold flex items-center gap-1';
-            hintEl.innerHTML = `<i class="fa-solid fa-lightbulb"></i> 提示：\${q.hint}`;
+            hintEl.innerHTML = '<i class="fa-solid fa-lightbulb"></i> 提示：' + q.hint;
             card.appendChild(hintEl);
         }
-
         wrap.appendChild(card);
 
-        setTimeout(() => {
-            const t = document.getElementById(`rtarget-\${q.id}`);
-            if (!t) return;
-            if (revealed) {
-                t.innerHTML = '';
-                q.correct.forEach(w => {
-                    const b = document.createElement('div');
-                    b.className = 'bg-emerald-500 text-white font-black px-4 py-2 rounded-xl shadow';
-                    b.textContent = w;
-                    t.appendChild(b);
-                });
-            } else {
-                renderReorderTarget(q.id);
-            }
-        }, 10);
-    });
+        // Fill target after DOM insertion
+        (function(qObj) {
+            setTimeout(function() {
+                var t = document.getElementById('rt-' + qObj.id);
+                if (!t) return;
+                if (revealed) {
+                    t.innerHTML = '';
+                    for (var ci = 0; ci < qObj.correct.length; ci++) {
+                        var b = document.createElement('div');
+                        b.className = 'bg-emerald-500 text-white font-black px-4 py-2 rounded-xl';
+                        b.textContent = qObj.correct[ci];
+                        t.appendChild(b);
+                    }
+                } else {
+                    renderReorderTarget(qObj.id);
+                }
+            }, 10);
+        })(q);
+    }
     ws.appendChild(wrap);
 }
 
 function clickReorder(qId, idx, word) {
     if (revealed) return;
     playSound('click');
-    const list = reorderState[qId] || [];
-    const existing = list.findIndex(s => s.idx === idx);
+    var list = reorderState[qId] || [];
+    var existIdx = -1;
+    for (var i = 0; i < list.length; i++) { if (list[i].idx === idx) { existIdx = i; break; } }
 
-    if (existing > -1) {
-        list.splice(existing, 1);
-        const btn = document.getElementById(`rbubble-\${qId}-\${idx}`);
+    if (existIdx > -1) {
+        list.splice(existIdx, 1);
+        var btn = document.getElementById('rb-' + qId + '-' + idx);
         if (btn) {
-            btn.className = 'bg-white text-purple-800 border-2 border-purple-200 px-4 py-2 rounded-xl font-black text-sm hover:bg-purple-50 transition-all btn-press';
+            btn.className = 'bg-white text-purple-800 border-2 border-purple-200 px-4 py-2 rounded-xl font-black text-sm hover:bg-purple-50 transition-all';
             btn.disabled = false;
-            btn.onclick = () => clickReorder(qId, idx, word);
+            (function(qid, bidx, bw) { btn.onclick = function() { clickReorder(qid, bidx, bw); }; })(qId, idx, word);
         }
     } else {
-        list.push({ idx, w: word });
-        const btn = document.getElementById(`rbubble-\${qId}-\${idx}`);
-        if (btn) { btn.className = 'bg-slate-100 text-slate-400 border-2 border-slate-200 px-4 py-2 rounded-xl font-black text-sm opacity-50 cursor-not-allowed'; btn.disabled = true; }
+        list.push({ idx: idx, w: word });
+        var btn2 = document.getElementById('rb-' + qId + '-' + idx);
+        if (btn2) { btn2.className = 'bg-slate-100 text-slate-400 border-2 border-slate-200 px-4 py-2 rounded-xl font-black text-sm opacity-50 cursor-not-allowed'; btn2.disabled = true; }
     }
-
     reorderState[qId] = list;
     renderReorderTarget(qId);
 }
 
 function renderReorderTarget(qId) {
-    const t = document.getElementById(`rtarget-\${qId}`);
+    var t = document.getElementById('rt-' + qId);
     if (!t) return;
-    const list = reorderState[qId] || [];
+    var list = reorderState[qId] || [];
     if (list.length === 0) {
         t.innerHTML = '<span class="text-xs text-slate-400 italic">點選下方詞語卡片，句子會自動拼合！</span>';
         return;
     }
     t.innerHTML = '';
-    list.forEach(item => {
-        const b = document.createElement('div');
+    for (var i = 0; i < list.length; i++) {
+        var item = list[i];
+        var b = document.createElement('div');
         b.className = 'bg-gradient-to-r from-purple-500 to-pink-500 text-white font-black px-4 py-2 rounded-xl flex items-center gap-2';
-        b.innerHTML = `
-            <span>\${item.w}</span>
-            <button onclick="clickReorder('\${qId}', \${item.idx}, '\${item.w.replace(/'/g,"$'")}'); event.stopPropagation();" class="text-pink-200 hover:text-white">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        `;
+        var wordSpan = document.createElement('span');
+        wordSpan.textContent = item.w;
+        b.appendChild(wordSpan);
+        var xBtn = document.createElement('button');
+        xBtn.className = 'text-pink-200 hover:text-white';
+        xBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        (function(qid, bidx, bw) {
+            xBtn.onclick = function(e) { e.stopPropagation(); clickReorder(qid, bidx, bw); };
+        })(qId, item.idx, item.w);
+        b.appendChild(xBtn);
         t.appendChild(b);
-    });
+    }
 }
 
 function clearReorder(qId) {
     playSound('click');
-    const list = reorderState[qId] || [];
-    list.forEach(item => {
-        const btn = document.getElementById(`rbubble-\${qId}-\${item.idx}`);
+    var list = reorderState[qId] || [];
+    for (var i = 0; i < list.length; i++) {
+        var item = list[i];
+        var btn = document.getElementById('rb-' + qId + '-' + item.idx);
         if (btn) {
-            btn.className = 'bg-white text-purple-800 border-2 border-purple-200 px-4 py-2 rounded-xl font-black text-sm hover:bg-purple-50 transition-all btn-press';
+            btn.className = 'bg-white text-purple-800 border-2 border-purple-200 px-4 py-2 rounded-xl font-black text-sm hover:bg-purple-50 transition-all';
             btn.disabled = false;
-            btn.onclick = () => clickReorder(qId, item.idx, item.w);
+            (function(qid, bidx, bw) { btn.onclick = function() { clickReorder(qid, bidx, bw); }; })(qId, item.idx, item.w);
         }
-    });
+    }
     reorderState[qId] = [];
     renderReorderTarget(qId);
 }
 
-// --- RENDER: READING COMP ---
+// --- RENDER READING COMP ---
 function renderReading(ex, ws) {
-    const wrap = document.createElement('div');
+    var wrap = document.createElement('div');
     wrap.className = 'space-y-5';
 
-    // Passage card
-    const pCard = document.createElement('div');
+    var pCard = document.createElement('div');
     pCard.className = 'p-5 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl space-y-3';
-    pCard.innerHTML = `
-        <div class="flex items-center justify-between flex-wrap gap-2">
-            <span class="bg-purple-600 text-white text-xs font-black px-3 py-1 rounded-full"><i class="fa-solid fa-book-open mr-1"></i> 閱讀短文</span>
-            <button onclick="speakText('\${ex.passage.replace(/\n/g,' ').replace(/'/g,"$'")}');" class="text-xs text-purple-700 bg-white border border-purple-300 px-3 py-1 rounded-full hover:bg-purple-50 font-bold flex items-center gap-1">
-                <i class="fa-solid fa-volume-high"></i> 朗讀全文
-            </button>
-        </div>
-        <pre class="whitespace-pre-line text-slate-700 font-bold leading-relaxed" style="font-family:inherit">\${ex.passage}</pre>
-    `;
+
+    var pHeader = document.createElement('div');
+    pHeader.className = 'flex items-center justify-between flex-wrap gap-2';
+    pHeader.innerHTML = '<span class="bg-purple-600 text-white text-xs font-black px-3 py-1 rounded-full"><i class="fa-solid fa-book-open mr-1"></i> 閱讀短文</span>';
+
+    var pTtsBtn = document.createElement('button');
+    pTtsBtn.className = 'text-xs text-purple-700 bg-white border border-purple-300 px-3 py-1 rounded-full hover:bg-purple-50 font-bold flex items-center gap-1';
+    pTtsBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i> 朗讀全文';
+    var passageClean = ex.passage.replace(/\n/g, ' ');
+    pTtsBtn.onclick = function() { speakText(passageClean); };
+    pHeader.appendChild(pTtsBtn);
+    pCard.appendChild(pHeader);
+
+    var pre = document.createElement('pre');
+    pre.className = 'whitespace-pre-line text-slate-700 font-bold leading-relaxed';
+    pre.style.fontFamily = 'inherit';
+    pre.textContent = ex.passage;
+    pCard.appendChild(pre);
     wrap.appendChild(pCard);
 
-    // Questions
-    ex.questions.forEach((q, i) => {
-        const card = document.createElement('div');
+    for (var qi = 0; qi < ex.questions.length; qi++) {
+        var q = ex.questions[qi];
+        var saved = getAns(q.id);
+        var card = document.createElement('div');
         card.className = 'p-4 bg-slate-50 rounded-xl border-2 border-slate-100 space-y-3';
 
-        const saved = getAnswer(q.id);
-        card.innerHTML = `
-            <div class="flex items-start justify-between gap-2 flex-wrap">
-                <div class="flex items-start gap-2 flex-grow">
-                    <span class="bg-purple-500 text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">\${i+1}</span>
-                    <p class="font-bold text-slate-800">\${q.qText}</p>
-                </div>
-                <button onclick="speakText('\${q.qText.replace(/'/g,"$'")}');" class="text-xs text-purple-600 bg-purple-50 border border-purple-200 px-2 py-1 rounded-full flex items-center gap-1 hover:bg-purple-100 font-bold flex-shrink-0">
-                    <i class="fa-solid fa-volume-high"></i> 讀問題
-                </button>
-            </div>
-        `;
+        var qRow = document.createElement('div');
+        qRow.className = 'flex items-start justify-between gap-2 flex-wrap';
 
-        const grid = document.createElement('div');
+        var qLeft = document.createElement('div');
+        qLeft.className = 'flex items-start gap-2 flex-grow';
+        qLeft.innerHTML = '<span class="bg-purple-500 text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">' + (qi+1) + '</span>' +
+            '<p class="font-bold text-slate-800">' + q.qText + '</p>';
+        qRow.appendChild(qLeft);
+
+        var qTts = document.createElement('button');
+        qTts.className = 'text-xs text-purple-600 bg-purple-50 border border-purple-200 px-2 py-1 rounded-full flex items-center gap-1 hover:bg-purple-100 font-bold flex-shrink-0';
+        qTts.innerHTML = '<i class="fa-solid fa-volume-high"></i> 讀';
+        (function(qt) { qTts.onclick = function() { speakText(qt); }; })(q.qText);
+        qRow.appendChild(qTts);
+        card.appendChild(qRow);
+
+        var grid = document.createElement('div');
         grid.className = 'grid grid-cols-1 md:grid-cols-3 gap-2';
-        const opts = shuffle(q.options);
-        opts.forEach(opt => {
-            const btn = document.createElement('button');
-            let cls = 'py-3 px-4 rounded-xl border-2 font-bold text-left text-sm transition-all btn-press ';
+        var opts = shuffle(q.options);
+        for (var oi = 0; oi < opts.length; oi++) {
+            var opt = opts[oi];
+            var btn = document.createElement('button');
+            var bcls = 'py-3 px-4 rounded-xl border-2 font-bold text-left text-sm transition-all ';
             if (revealed) {
-                if (opt === q.answer) cls += 'bg-emerald-500 text-white border-emerald-600';
-                else if (opt === saved) cls += 'bg-red-400 text-white border-red-500';
-                else cls += 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed';
+                if (opt === q.answer) bcls += 'bg-emerald-500 text-white border-emerald-600';
+                else if (opt === saved) bcls += 'bg-red-400 text-white border-red-500';
+                else bcls += 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed';
                 btn.disabled = true;
             } else if (saved === opt) {
-                cls += 'bg-purple-500 text-white border-purple-600';
+                bcls += 'bg-purple-500 text-white border-purple-600';
             } else {
-                cls += 'bg-white text-slate-700 border-slate-200 hover:bg-purple-50';
+                bcls += 'bg-white text-slate-700 border-slate-200 hover:bg-purple-50';
             }
-            btn.className = cls;
+            btn.className = bcls;
             btn.textContent = opt;
-            if (!revealed) btn.onclick = () => pickReading(q.id, opt);
+            if (!revealed) {
+                (function(qid, o) { btn.onclick = function() { pickReading(qid, o); }; })(q.id, opt);
+            }
             grid.appendChild(btn);
-        });
+        }
         card.appendChild(grid);
         wrap.appendChild(card);
-    });
+    }
     ws.appendChild(wrap);
 }
 
 function pickReading(qId, val) {
     if (revealed) return;
     playSound('click');
-    setAnswer(qId, val);
+    setAns(qId, val);
     loadExercise(currentDay);
-    setMascot('thinking', `你覺得答案是「\${val}」，想清楚再提交哦！`);
+    setMascot('thinking', '你覺得答案是「' + val + '」，想清楚再提交哦！');
 }
 
 // --- CLEAR DAY ---
 function clearDay() {
     playSound('click');
-    const key = `\${currentDay}_`;
-    Object.keys(userAnswers).forEach(k => { if (k.startsWith(key)) delete userAnswers[k]; });
+    var prefix = currentDay + '_';
+    var keys = Object.keys(userAnswers);
+    for (var i = 0; i < keys.length; i++) {
+        if (keys[i].indexOf(prefix) === 0) delete userAnswers[keys[i]];
+    }
     reorderState = {};
     revealed = false;
     loadExercise(currentDay);
-    setMascot('neutral', '🗑️ 已清除今天的答案，重新填寫吧！');
+    setMascot('neutral', '已清除今天的答案，重新填寫吧！');
 }
 
-// --- SUBMIT & VALIDATE ---
+// --- SUBMIT ---
 function submitAnswers() {
-    const ex = exercises[currentDay];
+    var ex = getExercise(currentDay);
     if (!ex) return;
 
-    let total = 0, correct = 0;
+    var total = 0;
+    var correct = 0;
 
     if (ex.type === 'cloze' || ex.type === 'reading_comp') {
-        ex.questions.forEach(q => {
+        for (var i = 0; i < ex.questions.length; i++) {
+            var q = ex.questions[i];
             total++;
-            if (getAnswer(q.id) === q.answer) correct++;
-        });
+            if (getAns(q.id) === q.answer) correct++;
+        }
     } else if (ex.type === 'pairing') {
-        ex.questions.forEach(q => {
+        for (var i = 0; i < ex.questions.length; i++) {
+            var q = ex.questions[i];
             total++;
-            const allMatch = q.answers.every((a, i) => getAnswer(q.id, i) === a);
+            var allMatch = true;
+            for (var j = 0; j < q.answers.length; j++) {
+                if (getAns(q.id, j) !== q.answers[j]) { allMatch = false; break; }
+            }
             if (allMatch) correct++;
-        });
+        }
     } else if (ex.type === 'punctuation') {
-        ex.questions.forEach(q => {
+        for (var i = 0; i < ex.questions.length; i++) {
+            var q = ex.questions[i];
             total++;
-            const slots = q.parts.filter(p => p.slotId);
-            const allMatch = slots.every(s => getAnswer(q.id, s.slotId) === s.answer);
+            var allSlots = [];
+            if (q.slots) allSlots = allSlots.concat(q.slots);
+            if (q.midSlots) allSlots = allSlots.concat(q.midSlots);
+            if (q.endSlots) allSlots = allSlots.concat(q.endSlots);
+            var allMatch = true;
+            for (var j = 0; j < allSlots.length; j++) {
+                if (getAns(q.id, allSlots[j].id) !== allSlots[j].ans) { allMatch = false; break; }
+            }
             if (allMatch) correct++;
-        });
+        }
     } else if (ex.type === 'reorder') {
-        ex.questions.forEach(q => {
+        for (var i = 0; i < ex.questions.length; i++) {
+            var q = ex.questions[i];
             total++;
-            const userSeq = (reorderState[q.id] || []).map(s => s.w).join('');
-            const correctSeq = q.correct.join('');
+            var list = reorderState[q.id] || [];
+            var userSeq = '';
+            for (var j = 0; j < list.length; j++) userSeq += list[j].w;
+            var correctSeq = q.correct.join('');
             if (userSeq === correctSeq) correct++;
-        });
+        }
     }
 
-    const allCorrect = correct === total;
+    var allCorrect = (correct === total && total > 0);
     revealed = true;
     loadExercise(currentDay);
 
@@ -1239,19 +1294,19 @@ function submitAnswers() {
         progress[currentDay] = true;
         saveState();
         buildCalendar();
-        setMascot('happy', `🌟 全部答對了！Hayden 和 Celine 為你歡呼！你太棒了！`);
         document.getElementById('status-msg').classList.remove('hidden');
+        setMascot('happy', '全部答對了！Hayden 和 Celine 為你歡呼！你太棒了！');
         speakText('答對了，做得非常好！');
         triggerConfetti();
-        showModal(`第 \${currentDay} 天完成！🌟`, `你答對了全部 \${total} 題！Hayden 和 Celine 為你鼓掌！繼續加油！`);
+        showModal('第 ' + currentDay + ' 天完成！🌟', '你答對了全部 ' + total + ' 題！Hayden 和 Celine 為你鼓掌！繼續加油！');
     } else {
         playSound('wrong');
-        setMascot('sad', `💪 答對了 \${correct} / \${total} 題。不要灰心！看看正確答案，下次一定更好！`);
-        speakText(`答對了\${correct}題，唔緊要，睇下正確答案，繼續努力！`);
+        setMascot('sad', '答對了 ' + correct + ' / ' + total + ' 題。不要灰心！看看正確答案，下次一定更好！');
+        speakText('唔緊要，睇下正確答案，繼續努力！');
     }
 }
 
-// --- NEXT DAY ---
+// --- NEXT ---
 function goNext() {
     if (currentDay < 14) {
         currentDay++;
@@ -1259,101 +1314,74 @@ function goNext() {
         reorderState = {};
         buildCalendar();
         loadExercise(currentDay);
-        setMascot('thinking', `📅 第 \${currentDay} 天開始了！Hayden 和 Celine 陪你一起！`);
+        setMascot('thinking', '第 ' + currentDay + ' 天開始了！Hayden 和 Celine 陪你一起！');
     } else {
         finalDone = true;
         playSound('correct');
-        setMascot('happy', '🏆 恭喜！你完成了所有14天挑戰！你是中文小達人！');
+        setMascot('happy', '恭喜！你完成了所有14天挑戰！你是中文小達人！');
         triggerConfetti();
-        showModal('🏆 全部完成！', '恭喜你完成了HAYDEN & CELINE中文樂全部14天挑戰！你真的太棒了！');
+        showModal('全部完成！🏆', '恭喜你完成了 HAYDEN & CELINE 中文樂全部14天挑戰！你真的太棒了！');
     }
 }
 
 // --- MASCOT ---
 function setMascot(state, msg) {
     document.getElementById('mascot-msg').textContent = msg;
-    const hEyes = document.getElementById('h-eyes');
-    const cEyes = document.getElementById('c-eyes');
-    const hMouth = document.getElementById('h-mouth');
-    const cMouth = document.getElementById('c-mouth');
+    var hE = document.getElementById('h-eyes');
+    var cE = document.getElementById('c-eyes');
+    var hM = document.getElementById('h-mouth');
+    var cM = document.getElementById('c-mouth');
+    if (!hE || !cE || !hM || !cM) return;
 
+    var eyeHtml, mouthHtml;
     if (state === 'happy') {
-        const happyEyes = `
-            <path d="M28 28 Q33 22 38 28" fill="none" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/>
-            <path d="M42 28 Q47 22 52 28" fill="none" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/>
-        `;
-        const happyMouth = `<path d="M33 36 Q40 44 47 36 Z" fill="#FF8A8A" stroke="#2D3748" stroke-width="2"/>`;
-        if (hEyes) hEyes.innerHTML = happyEyes;
-        if (cEyes) cEyes.innerHTML = happyEyes;
-        if (hMouth) hMouth.innerHTML = happyMouth;
-        if (cMouth) cMouth.innerHTML = happyMouth;
+        eyeHtml = '<path d="M28 28 Q33 22 38 28" fill="none" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/><path d="M42 28 Q47 22 52 28" fill="none" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/>';
+        mouthHtml = '<path d="M32 36 Q40 44 48 36 Z" fill="#FF8A8A" stroke="#2D3748" stroke-width="2"/>';
     } else if (state === 'sad') {
-        const sadEyes = `
-            <line x1="28" y1="25" x2="36" y2="31" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/>
-            <line x1="52" y1="25" x2="44" y2="31" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/>
-        `;
-        const sadMouth = `<path d="M34 40 Q40 34 46 40" fill="none" stroke="#2D3748" stroke-width="3" stroke-linecap="round"/>`;
-        if (hEyes) hEyes.innerHTML = sadEyes;
-        if (cEyes) cEyes.innerHTML = sadEyes;
-        if (hMouth) hMouth.innerHTML = sadMouth;
-        if (cMouth) cMouth.innerHTML = sadMouth;
+        eyeHtml = '<line x1="28" y1="25" x2="36" y2="31" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/><line x1="52" y1="25" x2="44" y2="31" stroke="#2D3748" stroke-width="4" stroke-linecap="round"/>';
+        mouthHtml = '<path d="M34 40 Q40 34 46 40" fill="none" stroke="#2D3748" stroke-width="3" stroke-linecap="round"/>';
     } else if (state === 'thinking') {
-        const thinkEyes = `
-            <circle cx="33" cy="28" r="3.5" fill="#2D3748"/>
-            <circle cx="47" cy="28" r="3.5" fill="#2D3748"/>
-            <circle cx="32" cy="27" r="1.2" fill="white"/>
-            <circle cx="46" cy="27" r="1.2" fill="white"/>
-        `;
-        const thinkMouth = `<path d="M35 37 L45 37" stroke="#2D3748" stroke-width="2.5" stroke-linecap="round"/>`;
-        if (hEyes) hEyes.innerHTML = thinkEyes;
-        if (cEyes) cEyes.innerHTML = thinkEyes;
-        if (hMouth) hMouth.innerHTML = thinkMouth;
-        if (cMouth) cMouth.innerHTML = thinkMouth;
+        eyeHtml = '<circle cx="33" cy="28" r="3.5" fill="#2D3748"/><circle cx="47" cy="28" r="3.5" fill="#2D3748"/><circle cx="32" cy="27" r="1.2" fill="white"/><circle cx="46" cy="27" r="1.2" fill="white"/>';
+        mouthHtml = '<path d="M35 37 L45 37" stroke="#2D3748" stroke-width="2.5" stroke-linecap="round"/>';
     } else {
-        const defEyes = `
-            <circle cx="33" cy="28" r="3.5" fill="#2D3748"/>
-            <circle cx="47" cy="28" r="3.5" fill="#2D3748"/>
-            <circle cx="32" cy="27" r="1.2" fill="white"/>
-            <circle cx="46" cy="27" r="1.2" fill="white"/>
-        `;
-        const defMouth = `<path d="M35 36 Q40 41 45 36" fill="none" stroke="#2D3748" stroke-width="2.5" stroke-linecap="round"/>`;
-        if (hEyes) hEyes.innerHTML = defEyes;
-        if (cEyes) cEyes.innerHTML = defEyes;
-        if (hMouth) hMouth.innerHTML = defMouth;
-        if (cMouth) cMouth.innerHTML = defMouth;
+        eyeHtml = '<circle cx="33" cy="28" r="3.5" fill="#2D3748"/><circle cx="47" cy="28" r="3.5" fill="#2D3748"/><circle cx="32" cy="27" r="1.2" fill="white"/><circle cx="46" cy="27" r="1.2" fill="white"/>';
+        mouthHtml = '<path d="M35 36 Q40 41 45 36" fill="none" stroke="#2D3748" stroke-width="2.5" stroke-linecap="round"/>';
     }
+    hE.innerHTML = eyeHtml; cE.innerHTML = eyeHtml;
+    hM.innerHTML = mouthHtml; cM.innerHTML = mouthHtml;
 }
 
 // --- MODAL ---
 function showModal(title, body) {
     document.getElementById('modal-title').textContent = title;
     document.getElementById('modal-body').textContent = body;
-    document.getElementById('reward-modal').classList.remove('hidden');
+    var modal = document.getElementById('reward-modal');
+    modal.style.display = 'flex';
 }
 
 function closeModal() {
-    document.getElementById('reward-modal').classList.add('hidden');
+    document.getElementById('reward-modal').style.display = 'none';
     if (!finalDone && currentDay < 14) goNext();
 }
 
 // --- CONFETTI ---
 function triggerConfetti() {
-    const area = document.getElementById('confetti-area');
+    var area = document.getElementById('confetti-area');
     area.innerHTML = '';
-    const colors = ['#a855f7','#ec4899','#f59e0b','#3b82f6','#10b981'];
-    for (let i = 0; i < 40; i++) {
-        const el = document.createElement('div');
-        el.style.cssText = `
-            position:absolute;
-            left:\${Math.random()*100}%;
-            top:\${Math.random()*100}%;
-            width:\${Math.random()*10+5}px;
-            height:\${Math.random()*10+5}px;
-            background:\${colors[Math.floor(Math.random()*colors.length)]};
-            border-radius:\${Math.random()>0.5?'50%':'3px'};
-            animation:ping \${Math.random()*1.5+0.5}s ease infinite;
-            opacity:0.8;
-        `;
+    var colors = ['#a855f7','#ec4899','#f59e0b','#3b82f6','#10b981'];
+    for (var i = 0; i < 35; i++) {
+        var el = document.createElement('div');
+        var size = Math.random() * 10 + 5;
+        el.style.position = 'absolute';
+        el.style.left = (Math.random() * 100) + '%';
+        el.style.top = (Math.random() * 100) + '%';
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+        el.style.opacity = '0.8';
+        el.className = 'animate-ping';
+        el.style.animationDuration = (Math.random() * 1.5 + 0.5) + 's';
         area.appendChild(el);
     }
 }
